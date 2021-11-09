@@ -1,0 +1,17 @@
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\bin\Release\netcoreapp3.1\WebBeaverExample.exe
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\bin\Release\netcoreapp3.1\WebBeaverExample.deps.json
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\bin\Release\netcoreapp3.1\WebBeaverExample.runtimeconfig.json
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\bin\Release\netcoreapp3.1\WebBeaverExample.runtimeconfig.dev.json
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\bin\Release\netcoreapp3.1\WebBeaverExample.dll
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\bin\Release\netcoreapp3.1\WebBeaverExample.pdb
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\bin\Release\netcoreapp3.1\WebBeaver.dll
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\bin\Release\netcoreapp3.1\WebBeaver.pdb
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\obj\Release\netcoreapp3.1\WebBeaverExample.csproj.AssemblyReference.cache
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\obj\Release\netcoreapp3.1\WebBeaverExample.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\obj\Release\netcoreapp3.1\WebBeaverExample.AssemblyInfoInputs.cache
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\obj\Release\netcoreapp3.1\WebBeaverExample.AssemblyInfo.cs
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\obj\Release\netcoreapp3.1\WebBeaverExample.csproj.CoreCompileInputs.cache
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\obj\Release\netcoreapp3.1\WebBeaverExample.csproj.CopyComplete
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\obj\Release\netcoreapp3.1\WebBeaverExample.dll
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\obj\Release\netcoreapp3.1\WebBeaverExample.pdb
+C:\Users\rlugt\source\repos\web-beaver\WebBeaverExample\obj\Release\netcoreapp3.1\WebBeaverExample.genruntimeconfig.cache
