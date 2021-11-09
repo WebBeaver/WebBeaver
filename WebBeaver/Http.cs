@@ -36,9 +36,8 @@ namespace WebBeaver.Http
 					// Get the request
 					Request request = GetRequest(stream);
 
-					string content = "<b>Hello World</b>";
-					byte[] buffer = Encoding.UTF8.GetBytes($"{request.HttpVersion} 200 OK\nConnection: keep-alive\nContent-Type: text/html\nContent-Length: {content.Length}\n\n{content}");
-					stream.Write(buffer, 0, buffer.Length);
+					// Check if we realy got a request
+					if (request == null) continue;
 
 					onRequest.Invoke(request, new Response(stream, request));
 				}
@@ -54,11 +53,7 @@ namespace WebBeaver.Http
 			{
 				size = stream.Read(data, 0, data.Length);
 				if (size == 0)
-				{
-					Console.WriteLine("client disconnected...");
-					Console.ReadLine();
 					return null;
-				}
 				memoryStream.Write(data, 0, size);
 			} while (stream.DataAvailable);
 			return new Request(Encoding.UTF8.GetString(memoryStream.ToArray()));
