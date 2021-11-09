@@ -7,4 +7,3 @@ C:\Users\rlugt\source\repos\web-beaver\WebBeaver\obj\Release\netcoreapp3.1\WebBe
 C:\Users\rlugt\source\repos\web-beaver\WebBeaver\obj\Release\netcoreapp3.1\WebBeaver.csproj.CoreCompileInputs.cache
 C:\Users\rlugt\source\repos\web-beaver\WebBeaver\obj\Release\netcoreapp3.1\WebBeaver.dll
 C:\Users\rlugt\source\repos\web-beaver\WebBeaver\obj\Release\netcoreapp3.1\WebBeaver.pdb
-C:\Users\rlugt\source\repos\web-beaver\WebBeaver\obj\Release\netcoreapp3.1\WebBeaver.csproj.AssemblyReference.cache

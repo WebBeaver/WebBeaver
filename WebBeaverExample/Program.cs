@@ -45,7 +45,7 @@ namespace WebBeaverExample
 		static void GetUser(Request req, Response res)
 		{
 			int id = int.Parse(req.Params["id"]);
-			if (id > users.Count)
+			if (id >= users.Count)
 			{
 				res.status = 404;
 				res.Send("text/json", "{ \"error\": \"No user found with id '" + id + "'\" }");

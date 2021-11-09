@@ -36,6 +36,9 @@ namespace WebBeaver
 					// Get the request
 					Request request = GetRequest(stream);
 
+					// Check if we realy got a request
+					if (request == null) continue;
+
 					onRequest.Invoke(request, new Response(stream, request));
 				}
 			}
