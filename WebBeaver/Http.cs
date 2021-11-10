@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace WebBeaver
 {
@@ -16,10 +17,11 @@ namespace WebBeaver
 
 		private TcpListener _tcp;
 
-		public Http(int port)
+		public Http(int port) : this(IPAddress.Any, port) { }
+		public Http(IPAddress address, int port)
 		{
 			Port = port;
-			_tcp = new TcpListener(port);
+			_tcp = new TcpListener(address, port);
 		}
 
 		public void Start()
