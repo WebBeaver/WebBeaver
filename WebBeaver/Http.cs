@@ -11,7 +11,12 @@ namespace WebBeaver
 {
 	public class Http
 	{
-		public delegate void RequestEventHandler(Request req, Response res);
+#if DEBUG
+        public static string rootDirectory = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "../../../");
+#else
+        public static string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
+#endif
+        public delegate void RequestEventHandler(Request req, Response res);
 		public int Port { get; }
 		public event RequestEventHandler onRequest;
 
@@ -74,7 +79,7 @@ namespace WebBeaver
             // Get the mime type for this extension
             switch (extension.ToLower())
             {
-                #region [List of mime types]
+#region [List of mime types]
                 case "323": return "text/h323";
                 case "3g2": return "video/3gpp2";
                 case "3gp": return "video/3gpp";
@@ -634,7 +639,7 @@ namespace WebBeaver
                 case "xwd": return "image/x-xwindowdump";
                 case "z": return "application/x-compress";
                 case "zip": return "application/x-zip-compressed";
-                #endregion
+#endregion
                 default: return "application/octet-stream";
             }
         }
@@ -710,14 +715,44 @@ namespace WebBeaver
 		/// <param name="content">Content data</param>
 		public void Send(string memeType, string content)
 		{
-			string headers = String.Join('\n', Headers.Select(header => header.Key + ": " + header.Value).ToArray());
+            // Check if our parameters exist
+            if (memeType == null)
+                throw new ArgumentNullException("memeType");
+            if (content == null)
+                throw new ArgumentNullException("content");
+
+            string headers = String.Join('\n', Headers.Select(header => header.Key + ": " + header.Value).ToArray());
 			byte[] buffer = Encoding.UTF8.GetBytes($"{_httpVersion} {status} {GetStatusMessage(status)}\n{headers}Connection: keep-alive\nContent-Type: {memeType}\nContent-Length: {content.Length}\n\n{content}");
 			_stream.Write(buffer, 0, buffer.Length);
 		}
 
+        /// <summary>
+        /// Sends file data to the client
+        /// </summary>
+        /// <param name="path">File path in project/dll directory to send</param>
+        public void SendFile(string path)
+		{
+            // Check if parameter Path exists
+            if (path == null)
+                throw new ArgumentNullException("path");
+            if (!File.Exists(Http.rootDirectory + path))
+                throw new FileNotFoundException(Http.rootDirectory + path);
+
+            // Read data from file
+            string result;
+            using (StreamReader streamReader = new StreamReader(Http.rootDirectory + path, Encoding.UTF8))
+            {
+                result = streamReader.ReadToEnd();
+            }
+
+            // Send data to the client
+            Send(Http.GetMimeType(Path.GetExtension(path)),
+                result);
+        }
+
 		public static string GetStatusMessage(int status)
 		{
-			#region [Status]
+#region [Status]
 			switch (status)
 			{
 				// informational response
@@ -775,7 +810,7 @@ namespace WebBeaver
 				default:
 					return String.Empty;
 			}
-			#endregion
+#endregion
 		}
 	}
 }
