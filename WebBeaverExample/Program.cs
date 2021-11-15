@@ -34,6 +34,7 @@ namespace WebBeaverExample
 			res.Send("text/html", "<b>Hello world</b><br><form action='/user' method='POST'>Name: <input type='text' name='name'/><input type='submit' name='submit' value='Add user' /></form>");
 		}
 	}
+	[Route("/api")]
 	class ApiController
 	{
 		public static Dictionary<int, string> users = new Dictionary<int, string>()
