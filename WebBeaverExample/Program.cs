@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using WebBeaver;
 using WebBeaver.Framework;
 
@@ -16,7 +18,8 @@ namespace WebBeaverExample
 			Router router = new Router(server);
 
 			// Import routes
-			router.Import(Home);					// Import a route from method
+			router.Import(Home);                    // Import a route from method
+			router.Import(Users);                   // Import a route from method
 			router.Import(typeof(ApiController));   // Import all routes from class
 
 			// Adding middleware
@@ -31,7 +34,12 @@ namespace WebBeaverExample
 		[Route("/")]
 		static void Home(Request req, Response res)
 		{
-			res.Send("text/html", "<b>Hello world</b><br><form action='/user' method='POST'>Name: <input type='text' name='name'/><input type='submit' name='submit' value='Add user' /></form>");
+			res.SendFile("/view/index.html");
+		}
+		[Route("/users")]
+		static void Users(Request req, Response res)
+		{
+			res.SendFile("/view/users.html");
 		}
 	}
 	class ApiController
