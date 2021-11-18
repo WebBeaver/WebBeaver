@@ -2,11 +2,9 @@
 WebBeaver is a web framework for c#.
 
 ## Installation
-To install and use WebBeaver you will need to install the dll file from the [latest release](https://github.com/RickLugtigheid/Web-Beaver/releases/latest).
-After that you will need to import the dll file into your project:
-- Open your project and right click on Dependencies
-- Click add Project Reference
-- Click on browse and navigate to the dll file and double click it
+
+You can install WebBeaver with [NuGet](https://www.nuget.org/packages/WebBeaver/1.0.0),
+or by importing the dll found in the [release](https://github.com/RickLugtigheid/Web-Beaver/releases/latest) you want to use.
 
 ## Example
 ```cs
