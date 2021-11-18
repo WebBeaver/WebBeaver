@@ -42,6 +42,7 @@ namespace WebBeaverExample
 			res.SendFile("/view/users.html");
 		}
 	}
+	[Route("/api")]
 	class ApiController
 	{
 		public static Dictionary<int, string> users = new Dictionary<int, string>()
