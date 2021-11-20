@@ -1,4 +1,6 @@
 # WebBeaver
+[![Version](https://img.shields.io/nuget/v/WebBeaver)]
+[![Downloads](https://img.shields.io/nuget/dt/WebBeaver)]
 WebBeaver is a flexible web framework for c#.
 
 ## Installation
