@@ -1,9 +1,9 @@
 # WebBeaver
-WebBeaver is a web framework for c#.
+WebBeaver is a flexible web framework for c#.
 
 ## Installation
 
-You can install WebBeaver with [NuGet](https://www.nuget.org/packages/WebBeaver/1.0.0),
+You can install WebBeaver with [NuGet](https://www.nuget.org/packages/WebBeaver),
 or by importing the dll found in the [release](https://github.com/RickLugtigheid/Web-Beaver/releases/latest) you want to use.
 
 ## Example
