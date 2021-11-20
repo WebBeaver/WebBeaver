@@ -87,7 +87,10 @@ namespace WebBeaver.Framework
 	public class Router
 	{
 		public delegate bool RequestEventHandler(Request req, Response res);
-
+		/// <summary>
+		/// The folder in your project/dll folder where your static files are stored
+		/// </summary>
+		private string _staticFolder = String.Empty;
 		/// <summary>
 		/// Add middleware to the router
 		/// <para>Return: if the router should continue handling the request</para>
@@ -98,6 +101,13 @@ namespace WebBeaver.Framework
 		{
 			server.onRequest += HandleRequest;
 		}
+
+		/// <summary>
+		/// Set the static folder position within your project/dll folder
+		/// </summary>
+		/// <param name="path">Path to static folder</param>
+		public void Static(string path) => _staticFolder = path;
+
 		/// <summary>
 		/// Import route method
 		/// </summary>
@@ -166,14 +176,14 @@ namespace WebBeaver.Framework
 			{
 				string exten = Path.GetExtension(req.Url);
 
-				// Make sure we can't request a protected file
+				// Make sure we can't request protected files
 				if (exten == ".cs") return;
 
 				// Check if the file exists
-				if (!File.Exists(Http.rootDirectory + req.Url)) return;
+				if (!File.Exists(Http.rootDirectory + _staticFolder + req.Url)) return;
 
 				// Send the file
-				res.SendFile(req.Url);
+				res.SendFile(_staticFolder + req.Url);
 				return;
 			}
 

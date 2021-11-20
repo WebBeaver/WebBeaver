@@ -16,6 +16,7 @@ namespace WebBeaverExample
 
 			// Create a router
 			Router router = new Router(server);
+			router.Static("public"); // All static file requests will go to the 'public' folder
 
 			// Import routes
 			router.Import(Home);                    // Import a route from method
