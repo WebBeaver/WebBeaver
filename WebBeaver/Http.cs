@@ -6,16 +6,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Net;
+using System.Diagnostics;
 
 namespace WebBeaver
 {
 	public class Http
 	{
-#if DEBUG
-        public static string rootDirectory = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "../../../");
-#else
-        public static string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
-#endif
+        public static string RootDirectory { get; private set; }
         public delegate void RequestEventHandler(Request req, Response res);
 		public int Port { get; }
 		public event RequestEventHandler onRequest;
@@ -25,6 +22,15 @@ namespace WebBeaver
 		public Http(int port) : this(IPAddress.Any, port) { }
 		public Http(IPAddress address, int port)
 		{
+            if (RootDirectory == null)
+			{
+                // When Debugger IsAttached we are running in VisualStudio
+                if (Debugger.IsAttached)
+                    RootDirectory = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "../../../"); // Project folder
+                // Else as a exe/dll
+                else RootDirectory = AppDomain.CurrentDomain.BaseDirectory; // dll folder
+
+            }
 			Port = port;
 			_tcp = new TcpListener(address, port);
 		}
@@ -736,12 +742,12 @@ namespace WebBeaver
             // Check if parameter Path exists
             if (path == null)
                 throw new ArgumentNullException("path");
-            if (!File.Exists(Http.rootDirectory + path))
-                throw new FileNotFoundException(Http.rootDirectory + path);
+            if (!File.Exists(Http.RootDirectory + path))
+                throw new FileNotFoundException(Http.RootDirectory + path);
 
             // Read data from file
             string result;
-            using (StreamReader streamReader = new StreamReader(Http.rootDirectory + path, Encoding.UTF8))
+            using (StreamReader streamReader = new StreamReader(Http.RootDirectory + path, Encoding.UTF8))
             {
                 result = streamReader.ReadToEnd();
             }
