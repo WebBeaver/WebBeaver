@@ -180,7 +180,7 @@ namespace WebBeaver.Framework
 				if (exten == ".cs") return;
 
 				// Check if the file exists
-				if (!File.Exists(Http.rootDirectory + _staticFolder + req.Url)) return;
+				if (!File.Exists(Http.RootDirectory + _staticFolder + req.Url)) return;
 
 				// Send the file
 				res.SendFile(_staticFolder + req.Url);
