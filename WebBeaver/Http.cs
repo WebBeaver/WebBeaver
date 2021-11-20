@@ -721,6 +721,7 @@ namespace WebBeaver
             if (content == null)
                 throw new ArgumentNullException("content");
 
+            // Send a response with the content we ant to send
             string headers = String.Join('\n', Headers.Select(header => header.Key + ": " + header.Value).ToArray());
 			byte[] buffer = Encoding.UTF8.GetBytes($"{_httpVersion} {status} {GetStatusMessage(status)}\n{headers}Connection: keep-alive\nContent-Type: {memeType}\nContent-Length: {content.Length}\n\n{content}");
 			_stream.Write(buffer, 0, buffer.Length);
@@ -748,6 +749,16 @@ namespace WebBeaver
             // Send data to the client
             Send(Http.GetMimeType(Path.GetExtension(path)),
                 result);
+        }
+        /// <summary>
+        /// Redirect to an other url
+        /// </summary>
+        /// <param name="path">url to redirect to</param>
+        public void Redirect(string path)
+		{
+            // Send a response with the location the client should redirect to
+            byte[] buffer = Encoding.UTF8.GetBytes($"{_httpVersion} 302 {GetStatusMessage(302)}\nLocation: {path}");
+            _stream.Write(buffer, 0, buffer.Length);
         }
 
 		public static string GetStatusMessage(int status)
