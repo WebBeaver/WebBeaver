@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace WebBeaver.Framework
 {
@@ -87,6 +88,10 @@ namespace WebBeaver.Framework
 	{
 		public delegate bool RequestEventHandler(Request req, Response res);
 		/// <summary>
+		/// The folder in your project/dll folder where your static files are stored
+		/// </summary>
+		private string _staticFolder = String.Empty;
+		/// <summary>
 		/// Add middleware to the router
 		/// <para>Return: if the router should continue handling the request</para>
 		/// </summary>
@@ -96,6 +101,13 @@ namespace WebBeaver.Framework
 		{
 			server.onRequest += HandleRequest;
 		}
+
+		/// <summary>
+		/// Set the static folder position within your project/dll folder
+		/// </summary>
+		/// <param name="path">Path to static folder</param>
+		public void Static(string path) => _staticFolder = path;
+
 		/// <summary>
 		/// Import route method
 		/// </summary>
@@ -156,16 +168,27 @@ namespace WebBeaver.Framework
 
 		private void HandleRequest(Request req, Response res)
 		{
-			// Get the formatted url
-			string url = RouteAttribute.Format(req.Url);
-
 			// When middleware returns false we won't continue
 			if (middleware != null && !middleware.Invoke(req, res)) return;
 
-			/// TODO:
-			/// Check if we request a file
-			/// and if we request a file than search for and then send the file
-			if (req.Url == "/favicon.ico") return; // Don't check routes for favicon
+			// Check if we are requesting a file
+			if (Path.HasExtension(req.Url))
+			{
+				string exten = Path.GetExtension(req.Url);
+
+				// Make sure we can't request protected files
+				if (exten == ".cs") return;
+
+				// Check if the file exists
+				if (!File.Exists(Http.rootDirectory + _staticFolder + req.Url)) return;
+
+				// Send the file
+				res.SendFile(_staticFolder + req.Url);
+				return;
+			}
+
+			// Get the formatted url
+			string url = RouteAttribute.Format(req.Url);
 
 			// Get the route for this request
 			RouteAttribute route = _routes.Find(r => r.Method.ToString().ToUpper() == req.Method.ToUpper() && r.IsMatch(url));
