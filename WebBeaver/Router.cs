@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace WebBeaver.Framework
 {
@@ -11,8 +13,11 @@ namespace WebBeaver.Framework
 		/// If the route contains parameters like :id
 		/// </summary>
 		public bool HasParams { get; private set; }
+		/// <summary>
+		/// Http method
+		/// </summary>
 		public string Method { get; }
-		public string Route { get; }
+		public string Route { get; private set; }
 		/// <summary>
 		/// Method to run when the request uses this route
 		/// </summary>
@@ -24,7 +29,7 @@ namespace WebBeaver.Framework
 		public RouteAttribute(string route)
 		{
 			Method = "GET";
-			Route = route;
+			Route = Format(route);
 		}
 		/// <summary>
 		/// Create a new route
@@ -34,7 +39,7 @@ namespace WebBeaver.Framework
 		public RouteAttribute(string method, string route)
 		{
 			Method = method;
-			Route = route;
+			Route = Format(route);
 		}
 		/// <summary>
 		/// Check if the request matches this route
@@ -47,8 +52,11 @@ namespace WebBeaver.Framework
 			if (Route == route) return true;
 
 			HasParams = true;
+
 			string[] routeParts = Route.Split('/');
 			string[] inputParts = route.Split('/');
+
+			if (routeParts.Length != inputParts.Length) return false;
 
 			// Check if every part of the route that isn't a variable is the same 
 			for (int i = 0; i < routeParts.Length; i++)
@@ -56,11 +64,33 @@ namespace WebBeaver.Framework
 					return false;
 			return true;
 		}
+		/// <summary>
+		/// Sets the route of this attribute
+		/// </summary>
+		/// <param name="route"></param>
+		public void Set(string route) => Route = Format(route);
+
+		/// <summary>
+		/// Formats the route
+		/// <para>So you can both use /user/ and /user for the same result</para>
+		/// </summary>
+		/// <param name="route"></param>
+		/// <returns>Formatted route</returns>
+		public static string Format(string route)
+		{
+			if (route != "/" && route.EndsWith('/'))
+				return route.Substring(0, route.Length - 1);
+			return route;
+		}
 	}
 
 	public class Router
 	{
 		public delegate bool RequestEventHandler(Request req, Response res);
+		/// <summary>
+		/// The folder in your project/dll folder where your static files are stored
+		/// </summary>
+		private string _staticFolder = String.Empty;
 		/// <summary>
 		/// Add middleware to the router
 		/// <para>Return: if the router should continue handling the request</para>
@@ -71,12 +101,22 @@ namespace WebBeaver.Framework
 		{
 			server.onRequest += HandleRequest;
 		}
+
+		/// <summary>
+		/// Set the static folder position within your project/dll folder
+		/// </summary>
+		/// <param name="path">Path to static folder</param>
+		public void Static(string path) => _staticFolder = path;
+
 		/// <summary>
 		/// Import route method
 		/// </summary>
 		/// <param name="method">Method to import</param>
 		public void Import(Action<Request, Response> method)
 		{
+			if (method == null)
+				throw new ArgumentNullException("method");
+
 			// Get route attribute from method
 			RouteAttribute attr = method.GetMethodInfo().GetCustomAttribute<RouteAttribute>();
 			// Check if we found an attribute
@@ -90,12 +130,23 @@ namespace WebBeaver.Framework
 		/// <param name="classType">Class to get routes from</param>
 		public void Import(Type classType)
 		{
+			if (classType == null)
+				throw new ArgumentNullException("classType");
+
+			// Check if our class has a Route attribute
+			// When we add a route attribute to a class we should use it as the base route for methods in class
+			string baseRoute = classType.GetCustomAttribute<RouteAttribute>()?.Route;
+			if (baseRoute == null) baseRoute = String.Empty;
+
 			// Get all methods in class
 			foreach (MethodInfo method in classType.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
 			{
 				// Get route attribute form method
 				RouteAttribute attr = method.GetCustomAttribute<RouteAttribute>();
-				
+
+				// Set the route to Route + base
+				attr.Set(baseRoute + attr.Route);
+
 				// Check if we found an attribute
 				if (attr != null)
 					// Check if we already added the same route
@@ -108,7 +159,7 @@ namespace WebBeaver.Framework
 						}
 						catch
 						{
-							throw new Exception("Mathod '" + method.Name + "' is an is not Action<Request, Response>");
+							throw new TargetException("Method '" + method.Name + "' is an is not Action<Request, Response>");
 						}
 						_routes.Add(attr);
 					}
@@ -120,13 +171,27 @@ namespace WebBeaver.Framework
 			// When middleware returns false we won't continue
 			if (middleware != null && !middleware.Invoke(req, res)) return;
 
-			/// TODO:
-			/// Check if we request a file
-			/// and if we request a file than search for and then send the file
-			if (req.Url == "/favicon.ico") return; // Don't check routes for favicon
+			// Check if we are requesting a file
+			if (Path.HasExtension(req.Url))
+			{
+				string exten = Path.GetExtension(req.Url);
+
+				// Make sure we can't request protected files
+				if (exten == ".cs") return;
+
+				// Check if the file exists
+				if (!File.Exists(Http.RootDirectory + _staticFolder + req.Url)) return;
+
+				// Send the file
+				res.SendFile(_staticFolder + req.Url);
+				return;
+			}
+
+			// Get the formatted url
+			string url = RouteAttribute.Format(req.Url);
 
 			// Get the route for this request
-			RouteAttribute route = _routes.Find(r => r.Method.ToString().ToUpper() == req.Method.ToUpper() && r.IsMatch(req.Url));
+			RouteAttribute route = _routes.Find(r => r.Method.ToString().ToUpper() == req.Method.ToUpper() && r.IsMatch(url));
 
 			// Check if we found a route
 			if (route != null)
@@ -137,7 +202,7 @@ namespace WebBeaver.Framework
 					req.Params = new Dictionary<string, string>();
 					// Get all parts for the paths
 					string[] inpPath = route.Route.Split('/');
-					string[] reqPath = req.Url.Split('/');
+					string[] reqPath = url.Split('/');
 
 					// Check if the length is the same
 					if (inpPath.Length != reqPath.Length) return;

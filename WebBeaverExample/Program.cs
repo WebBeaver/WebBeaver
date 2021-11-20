@@ -16,6 +16,7 @@ namespace WebBeaverExample
 
 			// Create a router
 			Router router = new Router(server);
+			router.Static("public"); // All static file requests will go to the 'public' folder
 
 			// Import routes
 			router.Import(Home);                    // Import a route from method
@@ -42,6 +43,7 @@ namespace WebBeaverExample
 			res.SendFile("/view/users.html");
 		}
 	}
+	[Route("/api")]
 	class ApiController
 	{
 		public static Dictionary<int, string> users = new Dictionary<int, string>()
