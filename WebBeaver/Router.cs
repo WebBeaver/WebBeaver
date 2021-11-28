@@ -165,6 +165,7 @@ namespace WebBeaver.Framework
 					}
 			}
 		}
+		public void Import<T>() where T : class => Import(typeof(T));
 
 		private void HandleRequest(Request req, Response res)
 		{
