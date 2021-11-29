@@ -9,14 +9,14 @@ using System.Net;
 
 namespace WebBeaver
 {
-	public class Http
+    public delegate void RequestEventHandler(Request req, Response res);
+    public class Http
 	{
 #if DEBUG
         public static string rootDirectory = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "../../../");
 #else
         public static string rootDirectory = AppDomain.CurrentDomain.BaseDirectory;
 #endif
-        public delegate void RequestEventHandler(Request req, Response res);
 		public int Port { get; }
 		public event RequestEventHandler onRequest;
 

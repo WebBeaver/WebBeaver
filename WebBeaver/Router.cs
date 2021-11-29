@@ -86,16 +86,19 @@ namespace WebBeaver.Framework
 
 	public class Router
 	{
-		public delegate bool RequestEventHandler(Request req, Response res);
+		public delegate bool MiddlewareEventHandler(Request req, Response res);
 		/// <summary>
 		/// The folder in your project/dll folder where your static files are stored
 		/// </summary>
 		private string _staticFolder = String.Empty;
+		private string _logFolder = String.Empty;
+
 		/// <summary>
 		/// Add middleware to the router
 		/// <para>Return: if the router should continue handling the request</para>
 		/// </summary>
-		public event RequestEventHandler middleware;
+		public event MiddlewareEventHandler middleware;
+		public event RequestEventHandler onRequestError;
 		private List<RouteAttribute> _routes = new List<RouteAttribute>();
 		public Router(Http server)
 		{
@@ -107,6 +110,12 @@ namespace WebBeaver.Framework
 		/// </summary>
 		/// <param name="path">Path to static folder</param>
 		public void Static(string path) => _staticFolder = path;
+		/// <summary>
+		/// Activate logging and set the folder where you want the logs to go
+		/// <para>Will log when there is an exception while handling a request</para>
+		/// </summary>
+		/// <param name="path">Path to log folder</param>
+		public void Log(string path) => _logFolder = path;
 
 		/// <summary>
 		/// Import route method
@@ -169,55 +178,79 @@ namespace WebBeaver.Framework
 
 		private void HandleRequest(Request req, Response res)
 		{
-			// When middleware returns false we won't continue
-			if (middleware != null && !middleware.Invoke(req, res)) return;
-
-			// Check if we are requesting a file
-			if (Path.HasExtension(req.Url))
+			try
 			{
-				string exten = Path.GetExtension(req.Url);
+				// When middleware returns false we won't continue
+				if (middleware != null && !middleware.Invoke(req, res)) return;
 
-				// Make sure we can't request protected files
-				if (exten == ".cs") return;
-
-				// Check if the file exists
-				if (!File.Exists(Http.rootDirectory + _staticFolder + req.Url)) return;
-
-				// Send the file
-				res.SendFile(_staticFolder + req.Url);
-				return;
-			}
-
-			// Get the formatted url
-			string url = RouteAttribute.Format(req.Url);
-
-			// Get the route for this request
-			RouteAttribute route = _routes.Find(r => r.Method.ToString().ToUpper() == req.Method.ToUpper() && r.IsMatch(url));
-
-			// Check if we found a route
-			if (route != null)
-			{
-				// Parse the path parameters
-				if (route.HasParams)
+				// Check if we are requesting a file
+				if (Path.HasExtension(req.Url))
 				{
-					req.Params = new Dictionary<string, string>();
-					// Get all parts for the paths
-					string[] inpPath = route.Route.Split('/');
-					string[] reqPath = url.Split('/');
+					string exten = Path.GetExtension(req.Url);
 
-					// Check if the length is the same
-					if (inpPath.Length != reqPath.Length) return;
+					// Make sure we can't request protected files
+					if (exten == ".cs") return;
 
-					// Compare all path parts
-					for (int i = 0; i < inpPath.Length; i++)
+					// Check if the file exists
+					if (!File.Exists(Http.rootDirectory + _staticFolder + req.Url)) return;
+
+					// Send the file
+					res.SendFile(_staticFolder + req.Url);
+					return;
+				}
+
+				// Get the formatted url
+				string url = RouteAttribute.Format(req.Url);
+
+				// Get the route for this request
+				RouteAttribute route = _routes.Find(r => r.Method.ToString().ToUpper() == req.Method.ToUpper() && r.IsMatch(url));
+
+				// Check if we found a route
+				if (route != null)
+				{
+					// Parse the path parameters
+					if (route.HasParams)
 					{
-						// Check if the input(route) path part is a parameter
-						if (inpPath[i].StartsWith(':'))
-							req.Params.Add(inpPath[i].Substring(1), reqPath[i]); // Add parameters
+						req.Params = new Dictionary<string, string>();
+						// Get all parts for the paths
+						string[] inpPath = route.Route.Split('/');
+						string[] reqPath = url.Split('/');
+
+						// Check if the length is the same
+						if (inpPath.Length != reqPath.Length) return;
+
+						// Compare all path parts
+						for (int i = 0; i < inpPath.Length; i++)
+						{
+							// Check if the input(route) path part is a parameter
+							if (inpPath[i].StartsWith(':'))
+								req.Params.Add(inpPath[i].Substring(1), reqPath[i]); // Add parameters
+						}
+					}
+					// Invoke the route action
+					route.Action.Invoke(req, res);
+				}
+			}
+			catch (Exception e)
+			{
+				// Write the error to the console
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.WriteLine(e.ToString() + '\n');
+				Console.ResetColor();
+
+				// Invoke onRequestError so we may redirect the request to forexample a 500 error page
+				onRequestError?.Invoke(req, res);
+
+				// Check if we should log the error
+				if (_logFolder != String.Empty)
+				{
+					// Write our exception to log
+					using (StreamWriter sw = new StreamWriter(_logFolder + "/error.log", true))
+					{
+						sw.WriteLine($"[{DateTime.Now}]:");
+						sw.WriteLine(e.ToString() + '\n');
 					}
 				}
-				// Invoke the route action
-				route.Action.Invoke(req, res);
 			}
 		}
 	}
