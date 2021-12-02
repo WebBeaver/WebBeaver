@@ -48,6 +48,7 @@ namespace WebBeaver
 				{
 					// Get the request
 					Request request = GetRequest(stream);
+                    request.IP = client.Client.RemoteEndPoint as IPEndPoint; 
 
 					// Check if we realy got a request
 					if (request == null) continue;
@@ -656,6 +657,7 @@ namespace WebBeaver
 		public string Method { get; }
 		public string Url { get; }
 		public string HttpVersion { get; }
+        public IPEndPoint IP { get; set; }
 		public IDictionary<string, string> Headers { get; }
 		public IDictionary<string, string> Params { get; set; }
 		public IDictionary<string, string> Body { get; }
