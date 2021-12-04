@@ -31,7 +31,7 @@ class Program
 	[Route("/")]
 	static void Home(Request req, Response res)
 	{
-		res.Send("text/html", "<b>My homepage</b>");
+		res.SendFile("/view/index.html");
 	}
 }
 ```
