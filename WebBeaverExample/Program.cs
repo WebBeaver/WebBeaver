@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using WebBeaver;
 using WebBeaver.Framework;
 
@@ -12,11 +11,16 @@ namespace WebBeaverExample
 		static void Main(string[] args)
 		{
 			// Create a http server
-			Http server = new Http(80);
+			//Http server = new Http(80);
+			Https server = new Https(443);
+			server.Certificate(
+				// Add cert for https
+				new X509Certificate2(Http.RootDirectory + "/localhost.pfx", "admin")); 
 
 			// Create a router
 			Router router = new Router(server);
-			router.Static("public"); // All static file requests will go to the 'public' folder
+			router.Static("public");					// All static file requests will go to the 'public' folder
+			router.Log(Http.RootDirectory + "/logs");	// Will log request exceptions to the log folder within the project/dll folder
 
 			// Import routes
 			router.Import(Home);                    // Import a route from method
@@ -28,6 +32,12 @@ namespace WebBeaverExample
 			{
 				Console.WriteLine("{0} {1}", req.Method, req.Url);
 				return true; // Let the router continue handling the request
+			};
+
+			// Redirect requests to 500 page if there is an error
+			router.onRequestError += (req, res) =>
+			{
+				res.SendFile("/view/500.html");
 			};
 
 			server.Start(); // Start our http server

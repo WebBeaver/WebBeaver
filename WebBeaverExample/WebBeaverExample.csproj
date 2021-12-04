@@ -9,4 +9,8 @@
     <ProjectReference Include="..\WebBeaver\WebBeaver.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="logs\" />
+  </ItemGroup>
+
 </Project>
