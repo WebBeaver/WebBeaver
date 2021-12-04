@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using WebBeaver;
 using WebBeaver.Framework;
 
@@ -12,7 +11,11 @@ namespace WebBeaverExample
 		static void Main(string[] args)
 		{
 			// Create a http server
-			Http server = new Http(80);
+			//Http server = new Http(80);
+			Https server = new Https(443);
+			server.Certificate(
+				// Add cert for https
+				new X509Certificate2(Http.RootDirectory + "/localhost.pfx", "admin")); 
 
 			// Create a router
 			Router router = new Router(server);

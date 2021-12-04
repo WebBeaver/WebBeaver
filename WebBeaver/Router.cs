@@ -97,7 +97,7 @@ namespace WebBeaver.Framework
 		/// </summary>
 		public event RequestEventHandler middleware;
 		private List<RouteAttribute> _routes = new List<RouteAttribute>();
-		public Router(Http server)
+		public Router(IHttpServer server)
 		{
 			server.onRequest += HandleRequest;
 		}
