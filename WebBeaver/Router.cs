@@ -2,7 +2,6 @@
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace WebBeaver.Framework
 {
@@ -136,7 +135,7 @@ namespace WebBeaver.Framework
 		/// Import all routes in class
 		/// </summary>
 		/// <param name="classType">Class to get routes from</param>
-		[Obsolete("Import(classType) is deprecated, please use Import<Class>() instead")]
+		[Obsolete("please use Import<Class>() instead")]
 		public void Import(Type classType)
 		{
 			if (classType == null)

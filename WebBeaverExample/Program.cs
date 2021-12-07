@@ -25,7 +25,7 @@ namespace WebBeaverExample
 			// Import routes
 			router.Import(Home);                    // Import a route from method
 			router.Import(Users);                   // Import a route from method
-			router.Import(typeof(ApiController));   // Import all routes from class
+			router.Import<ApiController>();   // Import all routes from class
 
 			// Adding middleware
 			router.middleware += (req, res) =>
