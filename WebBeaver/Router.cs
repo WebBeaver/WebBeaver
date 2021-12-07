@@ -116,7 +116,6 @@ namespace WebBeaver.Framework
 		/// </summary>
 		/// <param name="path">Path to log folder</param>
 		public void Log(string path) => _logFolder = path;
-
 		/// <summary>
 		/// Import route method
 		/// </summary>
@@ -137,6 +136,7 @@ namespace WebBeaver.Framework
 		/// Import all routes in class
 		/// </summary>
 		/// <param name="classType">Class to get routes from</param>
+		[Obsolete("Import(classType) is deprecated, please use Import<Class>() instead")]
 		public void Import(Type classType)
 		{
 			if (classType == null)
@@ -174,6 +174,10 @@ namespace WebBeaver.Framework
 					}
 			}
 		}
+		/// <summary>
+		/// Import all routes in class
+		/// </summary>
+		/// <typeparam name="T">Class to get routes from</typeparam>
 		public void Import<T>() where T : class => Import(typeof(T));
 
 		private void HandleRequest(Request req, Response res)
