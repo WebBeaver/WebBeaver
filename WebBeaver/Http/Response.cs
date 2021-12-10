@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using WebBeaver.Framework;
 
 namespace WebBeaver
 {
@@ -42,7 +43,7 @@ namespace WebBeaver
 		/// Sends file data to the client
 		/// </summary>
 		/// <param name="path">File path in project/dll directory to send</param>
-		public void SendFile(string path)
+		public void SendFile(string path, object args = null)
 		{
 			// Check if parameter Path exists
 			if (path == null)
@@ -57,9 +58,17 @@ namespace WebBeaver
 				result = streamReader.ReadToEnd();
 			}
 
+			string mime = Http.GetMimeType(Path.GetExtension(path));
+
+			// Check if we should use a template engine
+			if (Router.Instance.Engine.ContainsKey(Path.GetExtension(path).Substring(1)))
+			{
+				result	= Router.Instance.Engine[Path.GetExtension(path).Substring(1)].Invoke(result, args);
+				mime	= "text/html";
+			}
+
 			// Send data to the client
-			Send(Http.GetMimeType(Path.GetExtension(path)),
-				result);
+			Send(mime, result);
 		}
 		/// <summary>
 		/// Redirect to an other url
