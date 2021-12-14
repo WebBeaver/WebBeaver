@@ -29,12 +29,12 @@ namespace WebBeaverExample
 			// Import routes
 			router.Import(Home);                    // Import a route from method
 			router.Import(Users);                   // Import a route from method
-			router.Import<ApiController>();   // Import all routes from class
+			router.Import<ApiController>();			// Import all routes from class
 
 			// Adding middleware
 			router.middleware += (req, res) =>
 			{
-				req.user = new { role = "admin" };
+				req.user.Add("role", "user");
 				Console.WriteLine("{0} {1}", req.Method, req.Url);
 				return true; // Let the router continue handling the request
 			};

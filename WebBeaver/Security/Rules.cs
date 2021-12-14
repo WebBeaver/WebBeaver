@@ -25,12 +25,13 @@ namespace WebBeaver.Security
 		{
 			if (req.user == null)
 				return false;
-			PropertyInfo prop = req.user.GetType().GetProperty(PropertyName);
-			// Check if we have found a property
-			if (prop == null)
+
+			// Check if we have a property with the requested name
+			if (!req.user.ContainsKey(PropertyName))
 				return false;
+
 			// Get the value of the property
-			object value = prop.GetValue(req.user);
+			object value = req.user[PropertyName];
 
 			// Check if we should validate the value with regex
 			if (value.GetType() == typeof(string) && Value.GetType() == typeof(string))

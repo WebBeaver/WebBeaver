@@ -7,7 +7,7 @@ namespace WebBeaver
 {
 	public class Request
 	{
-		public object user;
+		public IDictionary<string, object> user = new Dictionary<string, object>();
 		public string Method { get; }
 		public string Url { get; }
 		public string HttpVersion { get; }
