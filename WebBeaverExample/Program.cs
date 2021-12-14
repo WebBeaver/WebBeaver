@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using WebBeaver;
 using WebBeaver.Framework;
+using WebBeaver.Security;
 
 namespace WebBeaverExample
 {
@@ -33,6 +34,7 @@ namespace WebBeaverExample
 			// Adding middleware
 			router.middleware += (req, res) =>
 			{
+				req.user = new { role = "admin" };
 				Console.WriteLine("{0} {1}", req.Method, req.Url);
 				return true; // Let the router continue handling the request
 			};
@@ -89,6 +91,7 @@ namespace WebBeaverExample
 			else res.Send("text/json", "{ \"user\": { \"id\": " + id + ", \"name\": \"" + users[id] + "\" } }");
 		}
 		[Route("POST", "/user")]
+		[Rule("role", "admin")]
 		static void AddUser(Request req, Response res)
 		{
 			users.Add(users.Count, req.Body["name"]);

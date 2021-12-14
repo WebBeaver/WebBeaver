@@ -7,6 +7,7 @@ namespace WebBeaver
 {
 	public class Request
 	{
+		public object user;
 		public string Method { get; }
 		public string Url { get; }
 		public string HttpVersion { get; }
