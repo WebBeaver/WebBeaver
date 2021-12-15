@@ -80,7 +80,7 @@ namespace WebBeaverExample
 			{ 1, "User2" }
 		};
 		[Route("/user/:id")]
-		[Rule(":id", @"^\d*", Target.Param)]
+		[Rule("id", "^\\d*$", Target.Param)]
 		static void GetUser(Request req, Response res)
 		{
 			int id = int.Parse(req.Params["id"]);
@@ -92,11 +92,18 @@ namespace WebBeaverExample
 			else res.Send("text/json", "{ \"user\": { \"id\": " + id + ", \"name\": \"" + users[id] + "\" } }");
 		}
 		[Route("POST", "/user")]
-		[Rule("role", "admin")]
+		[Rule("role", "admin")] // The user 'role' must be admin
+		[Rule("name", ".*", Target.Body)] // The body must contain a value for 'name'
 		static void AddUser(Request req, Response res)
 		{
 			users.Add(users.Count, req.Body["name"]);
 			Console.WriteLine("Added user: " + req.Body["name"]);
+			res.Send("text/json", "{ \"success\": true }");
+		}
+		[Route("/windows")]
+		[Rule("sec-ch-ua-platform", "Windows", Target.Header)]
+		static void IsWindows(Request req, Response res)
+		{
 			res.Send("text/json", "{ \"success\": true }");
 		}
 	}
