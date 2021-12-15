@@ -80,6 +80,7 @@ namespace WebBeaverExample
 			{ 1, "User2" }
 		};
 		[Route("/user/:id")]
+		[Rule(":id", @"^\d*", Target.Param)]
 		static void GetUser(Request req, Response res)
 		{
 			int id = int.Parse(req.Params["id"]);
