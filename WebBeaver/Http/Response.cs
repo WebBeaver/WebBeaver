@@ -71,11 +71,28 @@ namespace WebBeaver
 			Send(mime, result);
 		}
 		/// <summary>
+		/// A method to send json strings
+		/// </summary>
+		public void SendJson(string data) => Send("text/json", data);
+		/// <summary>
+		/// Send a status message
+		/// </summary>
+		public void SendStatus(int status)
+		{
+			this.status = status;
+			Send("text/html", GetStatusMessage(status));
+		}
+
+		/// <summary>
 		/// Redirect to an other url
 		/// </summary>
 		/// <param name="path">url to redirect to</param>
 		public void Redirect(string path)
 		{
+			// Check if our parameters exist
+			if (path == null)
+				throw new ArgumentNullException("memeType");
+
 			// Send a response with the location the client should redirect to
 			byte[] buffer = Encoding.UTF8.GetBytes($"{_httpVersion} 302 {GetStatusMessage(302)}\nLocation: {path}");
 			_stream.Write(buffer, 0, buffer.Length);
