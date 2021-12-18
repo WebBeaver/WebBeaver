@@ -80,7 +80,7 @@ namespace WebBeaverExample
 			{ 1, "User2" }
 		};
 		[Route("/user/:id")]
-		[Rule("id", "^\\d*$", Target.Param)]
+		[Rule("id", "^\\d*$", Target.Param, status = 404)]
 		static void GetUser(Request req, Response res)
 		{
 			int id = int.Parse(req.Params["id"]);
@@ -93,7 +93,7 @@ namespace WebBeaverExample
 		}
 		[Route("POST", "/user")]
 		[Rule("role", "admin")] // The user 'role' must be admin
-		[Rule("name", ".*", Target.Body)] // The body must contain a value for 'name'
+		[Rule("name", ".*", Target.Body, redirect = "/users", status = 404)] // The body must contain a value for 'name'
 		static void AddUser(Request req, Response res)
 		{
 			users.Add(users.Count, req.Body["name"]);
