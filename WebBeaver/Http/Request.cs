@@ -2,25 +2,26 @@
 using System.Net;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using WebBeaver.Framework;
 
 namespace WebBeaver
 {
 	public class Request
 	{
-		public IDictionary<string, object> user = new Dictionary<string, object>();
+		public WebCollection<string, object> user = new WebCollection<string, object>();
 		public string Method { get; }
 		public string Url { get; }
 		public string HttpVersion { get; }
 		public IPEndPoint IP { get; set; }
-		public IDictionary<string, string> Headers { get; }
-		public IDictionary<string, string> Params { get; set; }
-		public IDictionary<string, string> Body { get; }
-		public IDictionary<string, string> Query { get; }
+		public WebCollection<string, string> Headers { get; }
+		public WebCollection<string, string> Params { get; set; }
+		public WebCollection<string, string> Body { get; }
+		public WebCollection<string, string> Query { get; }
 		public Request(string requestData)
 		{
 			string[] headerAndBody = requestData.Split("\r\n\r\n");
-			Query = new Dictionary<string, string>();
-			Body = new Dictionary<string, string>();
+			Query	= new WebCollection<string, string>();
+			Body	= new WebCollection<string, string>();
 			// Parse the request line
 			Match requestLine = Regex.Match(
 				headerAndBody[0].Substring(0, headerAndBody[0].IndexOf(Environment.NewLine)), // Get the request line
@@ -39,7 +40,7 @@ namespace WebBeaver
 			Url = uri[0];
 
 			// Get all request headers
-			Headers = new Dictionary<string, string>();
+			Headers = new WebCollection<string, string>();
 			MatchCollection headers = Regex.Matches(requestData, "(.*): (.*)");
 			foreach (Match match in headers)
 			{

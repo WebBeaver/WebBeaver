@@ -243,7 +243,7 @@ namespace WebBeaver.Framework
 					// Parse the path parameters
 					if (route.HasParams)
 					{
-						req.Params = new Dictionary<string, string>();
+						req.Params = new WebCollection<string, string>();
 						// Get all parts for the paths
 						string[] inpPath = route.Route.Split('/');
 						string[] reqPath = url.Split('/');

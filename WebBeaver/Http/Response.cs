@@ -10,13 +10,13 @@ namespace WebBeaver
 	public class Response
 	{
 		public int status = 200;
-		public IDictionary<string, string> Headers { get; }
+		public WebCollection<string, string> Headers { get; }
 		private Stream _stream;
 		private string _httpVersion;
 		public Response(Stream stream, Request req)
 		{
 			// Create a Dictionary for headers
-			Headers = new Dictionary<string, string>();
+			Headers = new WebCollection<string, string>();
 			_stream = stream;
 			_httpVersion = req.HttpVersion;
 		}
@@ -33,9 +33,9 @@ namespace WebBeaver
 			if (content == null)
 				throw new ArgumentNullException("content");
 
-			// Send a response with the content we ant to send
+			// Send a response with the content we want to send
 			string headers = String.Join('\n', Headers.Select(header => header.Key + ": " + header.Value).ToArray());
-			byte[] buffer = Encoding.UTF8.GetBytes($"{_httpVersion} {status} {GetStatusMessage(status)}\n{headers}Connection: keep-alive\nContent-Type: {memeType}\nContent-Length: {content.Length}\n\n{content}");
+			byte[] buffer = Encoding.UTF8.GetBytes($"{_httpVersion} {status} {GetStatusMessage(status)}\n{headers}\nConnection: keep-alive\nContent-Type: {memeType}\nContent-Length: {content.Length}\n\n{content}");
 			_stream.Write(buffer, 0, buffer.Length);
 		}
 
