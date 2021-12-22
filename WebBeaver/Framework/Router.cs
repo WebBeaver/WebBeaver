@@ -2,12 +2,18 @@
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using WebBeaver.Security;
+using System.Linq;
 
 namespace WebBeaver.Framework
 {
 	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 	public class RouteAttribute : Attribute
 	{
+		/// <summary>
+		/// A list of rules connected to this route
+		/// </summary>
+		public List<RuleAttribute> Rules { get; private set; }
 		/// <summary>
 		/// If the route contains parameters like :id
 		/// </summary>
@@ -40,6 +46,10 @@ namespace WebBeaver.Framework
 			Method = method;
 			Route = Format(route);
 		}
+		public void GetRules()
+		{
+			Rules = Action.GetMethodInfo().GetCustomAttributes<RuleAttribute>().ToList();
+		}
 		/// <summary>
 		/// Check if the request matches this route
 		/// </summary>
@@ -63,6 +73,19 @@ namespace WebBeaver.Framework
 					return false;
 			return true;
 		}
+
+		public bool CheckAccess(Request req)
+		{
+			if (Rules == null) 
+				return true;
+			foreach (RuleAttribute rule in Rules)
+			{
+				if (!rule.Validate(req))
+					return false;
+			}
+			return true;
+		}
+
 		/// <summary>
 		/// Sets the route of this attribute
 		/// </summary>
@@ -133,6 +156,7 @@ namespace WebBeaver.Framework
 			// Check if we found an attribute
 			if (attr == null) throw new Exception("Couldn't find 'Route' attribute on method '" + method.GetMethodInfo().Name + "'");
 			attr.Action = method;
+			attr.GetRules();
 			_routes.Add(attr);
 		}
 		/// <summary>
@@ -168,6 +192,7 @@ namespace WebBeaver.Framework
 						try
 						{
 							attr.Action = (Action<Request, Response>)Delegate.CreateDelegate(typeof(Action<Request, Response>), method);
+							attr.GetRules();
 						}
 						catch
 						{
@@ -218,7 +243,7 @@ namespace WebBeaver.Framework
 					// Parse the path parameters
 					if (route.HasParams)
 					{
-						req.Params = new Dictionary<string, string>();
+						req.Params = new WebCollection<string, string>();
 						// Get all parts for the paths
 						string[] inpPath = route.Route.Split('/');
 						string[] reqPath = url.Split('/');
@@ -234,8 +259,15 @@ namespace WebBeaver.Framework
 								req.Params.Add(inpPath[i].Substring(1), reqPath[i]); // Add parameters
 						}
 					}
-					// Invoke the route action
-					route.Action.Invoke(req, res);
+					// Check if we have access to this route
+					if (route.CheckAccess(req))
+						// Invoke the route action
+						route.Action.Invoke(req, res);
+					else
+					{
+						res.status = 403;
+						res.Send("text/html", "403");
+					}
 				}
 			}
 			catch (Exception e)
