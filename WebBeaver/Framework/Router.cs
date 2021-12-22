@@ -74,14 +74,18 @@ namespace WebBeaver.Framework
 			return true;
 		}
 
-		public bool CheckAccess(Request req)
+		public bool CheckAccess(Request req, out RuleAttribute blocked)
 		{
+			blocked = null;
 			if (Rules == null) 
 				return true;
 			foreach (RuleAttribute rule in Rules)
 			{
 				if (!rule.Validate(req))
+				{
+					blocked = rule;
 					return false;
+				}
 			}
 			return true;
 		}
@@ -260,13 +264,18 @@ namespace WebBeaver.Framework
 						}
 					}
 					// Check if we have access to this route
-					if (route.CheckAccess(req))
+					if (route.CheckAccess(req, out RuleAttribute rule))
 						// Invoke the route action
 						route.Action.Invoke(req, res);
 					else
 					{
-						res.status = 403;
-						res.Send("text/html", "403");
+						// Set our request status
+						res.status = rule.status;
+
+						// Check if we have a route to redirect to
+						if (rule.redirect != null)
+							res.Redirect(rule.redirect);
+						else res.Send("text/html", Response.GetStatusMessage(rule.status));
 					}
 				}
 			}

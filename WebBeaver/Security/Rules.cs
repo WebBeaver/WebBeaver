@@ -10,6 +10,8 @@ namespace WebBeaver.Security
 		public string PropertyName { get; }
 		public object Value { get; }
 		public Target Target { get; }
+		public string redirect = null;
+		public int status = 403;
 		public RuleAttribute(string property, object value, Target target = Target.User)
 		{
 			PropertyName	= property;
