@@ -98,6 +98,8 @@ namespace WebBeaver
 			_stream.Write(buffer, 0, buffer.Length);
 		}
 
+		public void SetCookie(Cookie cookie) => Headers.Add("Set-Cookie", cookie.ToString());
+
 		public static string GetStatusMessage(int status)
 		{
 			#region [Status]
