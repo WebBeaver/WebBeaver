@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,7 +34,16 @@ namespace WebBeaver
 
 			// Send a response with the content we want to send
 			string headers = String.Join('\n', Headers.Select(header => header.Key + ": " + header.Value).ToArray());
-			byte[] buffer = Encoding.UTF8.GetBytes($"{_httpVersion} {status} {GetStatusMessage(status)}\n{headers}\nConnection: keep-alive\nContent-Type: {memeType}\nContent-Length: {content.Length}\n\n{content}");
+
+			//  Build our http request
+			StringBuilder req = new StringBuilder();
+			req.AppendLine($"{_httpVersion} {status} {GetStatusMessage(status)}"); // Add our request line
+			if (headers != String.Empty)
+				req.AppendLine(headers); // Add our user given headers and our content
+			req.Append($"Content-Type: {memeType}\nContent-Length: {content.Length}\n\n{content}"); // Add our default headers
+
+			// Write our request to the client
+			byte[] buffer = Encoding.UTF8.GetBytes(req.ToString());
 			_stream.Write(buffer, 0, buffer.Length);
 		}
 
@@ -66,7 +74,7 @@ namespace WebBeaver
 				result	= Router.Instance.Engine[Path.GetExtension(path).Substring(1)].Invoke(result, args);
 				mime	= "text/html";
 			}
-
+			Console.WriteLine(result);
 			// Send data to the client
 			Send(mime, result);
 		}

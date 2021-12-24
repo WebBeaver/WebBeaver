@@ -35,7 +35,7 @@ namespace WebBeaver.Security
 					// Get the value of the property
 					string header = req.Headers[PropertyName];
 					if (Value.GetType() != typeof(string))
-						throw new InvalidCastException($"Rule({PropertyName}, {Value}, {Target}).Value is not a string");
+						throw new InvalidCastException($"Target '{Target}' value must be a string, '{Value.GetType().Name}' given");
 					return Regex.IsMatch(header, (string)Value);
 
 				case Target.Body:
@@ -49,7 +49,7 @@ namespace WebBeaver.Security
 					// Get the value of the property
 					string body = req.Body[PropertyName];
 					if (Value.GetType() != typeof(string))
-						throw new InvalidCastException($"Rule({PropertyName}, {Value}, {Target}).Value is not a string");
+						throw new InvalidCastException($"Target '{Target}' value must be a string, '{Value.GetType().Name}' given");
 					return Regex.IsMatch(body, (string)Value);
 
 				case Target.Param:
@@ -63,7 +63,7 @@ namespace WebBeaver.Security
 					// Get the value of the property
 					string param = req.Params[PropertyName];
 					if (Value.GetType() != typeof(string))
-						throw new InvalidCastException($"Rule({PropertyName}, {Value}, {Target}).Value is not a string");
+						throw new InvalidCastException($"Target '{Target}' value must be a string, '{Value.GetType().Name}' given");
 					return Regex.IsMatch(param, (string)Value);
 
 				default:
