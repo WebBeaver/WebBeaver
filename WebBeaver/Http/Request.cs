@@ -12,9 +12,10 @@ namespace WebBeaver
 		public string Method { get; }
 		public string Url { get; }
 		public string HttpVersion { get; }
-		public IPEndPoint IP { get; set; }
+		public IPEndPoint IP { get; internal set; }
+		public Cookie[] Cookies { get; }
 		public WebCollection<string, string> Headers { get; }
-		public WebCollection<string, string> Params { get; set; }
+		public WebCollection<string, string> Params { get; internal set; }
 		public WebCollection<string, string> Body { get; }
 		public WebCollection<string, string> Query { get; }
 		public Request(string requestData)
@@ -46,6 +47,10 @@ namespace WebBeaver
 			{
 				Headers.Add(match.Groups[1].Value, match.Groups[2].Value);
 			}
+
+			// Parse cookies
+			if (Headers.ContainsKey("Cookie"))
+				Cookies = Cookie.Parse(Headers["Cookie"]);
 
 			// Try to get the body
 			if (headerAndBody.Length == 2 && headerAndBody[1] != string.Empty)

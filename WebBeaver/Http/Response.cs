@@ -18,6 +18,10 @@ namespace WebBeaver
 			Headers = new WebCollection<string, string>();
 			_stream = stream;
 			_httpVersion = req.HttpVersion;
+
+			// Add default headers
+			Headers.Add("Access-Control-Allow-Origin", "*");
+			Headers.Add("Connection", "Keep-Alive");
 		}
 		/// <summary>
 		/// Send data to the client
@@ -74,7 +78,7 @@ namespace WebBeaver
 				result	= Router.Instance.Engine[Path.GetExtension(path).Substring(1)].Invoke(result, args);
 				mime	= "text/html";
 			}
-			Console.WriteLine(result);
+
 			// Send data to the client
 			Send(mime, result);
 		}

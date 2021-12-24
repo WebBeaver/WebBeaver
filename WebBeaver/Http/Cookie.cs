@@ -38,5 +38,17 @@ namespace WebBeaver
 
 			return result.ToString();
 		}
+
+		public static Cookie[] Parse(string header)
+		{
+			List<Cookie> cookies = new List<Cookie>();
+			string[] baseCookies = header.Split(';');
+			for (int i = 0; i < baseCookies.Length; i++)
+			{
+				string[] keyVal = baseCookies[i].Split('=');
+				cookies.Add(new Cookie() { name = keyVal[0], value = keyVal[1] });
+			}
+			return cookies.ToArray();
+		}
 	}
 }
