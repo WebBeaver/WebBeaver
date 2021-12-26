@@ -1,23 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using WebBeaver.Framework;
 
 namespace WebBeaver
 {
 	public class Response
 	{
 		public int status = 200;
-		public IDictionary<string, string> Headers { get; }
+		public WebCollection<string, string> Headers { get; }
 		private Stream _stream;
 		private string _httpVersion;
 		public Response(Stream stream, Request req)
 		{
 			// Create a Dictionary for headers
-			Headers = new Dictionary<string, string>();
+			Headers = new WebCollection<string, string>();
 			_stream = stream;
 			_httpVersion = req.HttpVersion;
+
+			// Add default headers
+			Headers.Add("Access-Control-Allow-Origin", "*");
+			Headers.Add("Connection", "Keep-Alive");
 		}
 		/// <summary>
 		/// Send data to the client
@@ -32,9 +36,18 @@ namespace WebBeaver
 			if (content == null)
 				throw new ArgumentNullException("content");
 
-			// Send a response with the content we ant to send
+			// Send a response with the content we want to send
 			string headers = String.Join('\n', Headers.Select(header => header.Key + ": " + header.Value).ToArray());
-			byte[] buffer = Encoding.UTF8.GetBytes($"{_httpVersion} {status} {GetStatusMessage(status)}\n{headers}Connection: keep-alive\nContent-Type: {memeType}\nContent-Length: {content.Length}\n\n{content}");
+
+			//  Build our http request
+			StringBuilder req = new StringBuilder();
+			req.AppendLine($"{_httpVersion} {status} {GetStatusMessage(status)}"); // Add our request line
+			if (headers != String.Empty)
+				req.AppendLine(headers); // Add our user given headers and our content
+			req.Append($"Content-Type: {memeType}\nContent-Length: {content.Length}\n\n{content}"); // Add our default headers
+
+			// Write our request to the client
+			byte[] buffer = Encoding.UTF8.GetBytes(req.ToString());
 			_stream.Write(buffer, 0, buffer.Length);
 		}
 
@@ -42,7 +55,7 @@ namespace WebBeaver
 		/// Sends file data to the client
 		/// </summary>
 		/// <param name="path">File path in project/dll directory to send</param>
-		public void SendFile(string path)
+		public void SendFile(string path, object args = null)
 		{
 			// Check if parameter Path exists
 			if (path == null)
@@ -57,20 +70,47 @@ namespace WebBeaver
 				result = streamReader.ReadToEnd();
 			}
 
+			string mime = Http.GetMimeType(Path.GetExtension(path));
+
+			// Check if we should use a template engine
+			if (Router.Instance.Engine.ContainsKey(Path.GetExtension(path).Substring(1)))
+			{
+				result	= Router.Instance.Engine[Path.GetExtension(path).Substring(1)].Invoke(result, args);
+				mime	= "text/html";
+			}
+
 			// Send data to the client
-			Send(Http.GetMimeType(Path.GetExtension(path)),
-				result);
+			Send(mime, result);
 		}
+		/// <summary>
+		/// A method to send json strings
+		/// </summary>
+		public void SendJson(string data) => Send("text/json", data);
+		/// <summary>
+		/// Send a status message
+		/// </summary>
+		public void SendStatus(int status)
+		{
+			this.status = status;
+			Send("text/html", GetStatusMessage(status));
+		}
+
 		/// <summary>
 		/// Redirect to an other url
 		/// </summary>
 		/// <param name="path">url to redirect to</param>
 		public void Redirect(string path)
 		{
+			// Check if our parameters exist
+			if (path == null)
+				throw new ArgumentNullException("memeType");
+
 			// Send a response with the location the client should redirect to
 			byte[] buffer = Encoding.UTF8.GetBytes($"{_httpVersion} 302 {GetStatusMessage(302)}\nLocation: {path}");
 			_stream.Write(buffer, 0, buffer.Length);
 		}
+
+		public void SetCookie(Cookie cookie) => Headers.Add("Set-Cookie", cookie.ToString());
 
 		public static string GetStatusMessage(int status)
 		{
