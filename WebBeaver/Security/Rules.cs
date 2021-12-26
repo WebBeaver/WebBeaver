@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace WebBeaver.Security
 {
-	public enum Target { User, Header, Body, Param }
+	public enum Target { User, Header, Body, Param, Cookie }
 	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
 	public class RuleAttribute : Attribute
 	{
@@ -25,11 +25,12 @@ namespace WebBeaver.Security
 		/// <returns></returns>
 		public bool Validate(Request req)
 		{
+			if (req.Headers == null)
+				return false;
 			switch (Target)
 			{
 				case Target.Header:
-					if (req.Headers == null)
-						return false;
+
 					if (!req.Headers.ContainsKey(PropertyName))
 						return false;
 					// Get the value of the property
@@ -39,9 +40,6 @@ namespace WebBeaver.Security
 					return Regex.IsMatch(header, (string)Value);
 
 				case Target.Body:
-					if (req.Body == null)
-						return false;
-
 					// Check if we have a property with the requested name
 					if (!req.Body.ContainsKey(PropertyName))
 						return false;
@@ -53,9 +51,6 @@ namespace WebBeaver.Security
 					return Regex.IsMatch(body, (string)Value);
 
 				case Target.Param:
-					if (req.Params == null)
-						return false;
-
 					// Check if we have a property with the requested name
 					if (!req.Params.ContainsKey(PropertyName))
 						return false;
@@ -65,6 +60,14 @@ namespace WebBeaver.Security
 					if (Value.GetType() != typeof(string))
 						throw new InvalidCastException($"Target '{Target}' value must be a string, '{Value.GetType().Name}' given");
 					return Regex.IsMatch(param, (string)Value);
+
+				case Target.Cookie:
+					if (Value.GetType() != typeof(string))
+						throw new InvalidCastException($"Target '{Target}' value must be a string, '{Value.GetType().Name}' given");
+
+					if (req.Cookies == null || !req.Cookies.ContainsKey(PropertyName))
+						return false;
+					return Regex.IsMatch(req.Cookies[PropertyName].value, (string)Value);
 
 				default:
 					if (req.user == null)

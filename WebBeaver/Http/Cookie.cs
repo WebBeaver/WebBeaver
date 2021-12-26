@@ -18,6 +18,9 @@ namespace WebBeaver
 		public string name;
 		public string value;
 
+
+		public bool IsAssigned { get; internal set; }
+
 		public override string ToString()
 		{
 			StringBuilder result = new StringBuilder();

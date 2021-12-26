@@ -58,7 +58,9 @@ namespace WebBeaver.Framework
             _inner = contents;
 		}
         public Cookie this[string name] => _inner.FirstOrDefault(c => c.name == name);
-		public int Length => _inner.Length;
+        public bool ContainsKey(string key) => (object)_inner.FirstOrDefault(c => c.name == key) != null;
+
+        public int Length => _inner.Length;
         IEnumerator IEnumerable.GetEnumerator() => _inner.GetEnumerator();
         public IEnumerator<Cookie> GetEnumerator()
 		{
