@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WebBeaver.Framework
 {
@@ -36,8 +37,6 @@ namespace WebBeaver.Framework
 		}
         public bool ContainsKey(TKey key) => Keys.Contains(key);
 
-
-
 		IEnumerator IEnumerable.GetEnumerator()
 		{
             for (int i = 0; i < Keys.Count; i++)
@@ -50,4 +49,21 @@ namespace WebBeaver.Framework
                 yield return new KeyValuePair<TKey, TValue>(Keys[i], Values[i]);
         }
 	}
+
+    public class CookieArray : IEnumerable<Cookie>, IEnumerable
+    {
+        private Cookie[] _inner;
+        public CookieArray(Cookie[] contents)
+		{
+            _inner = contents;
+		}
+        public Cookie this[string name] => _inner.FirstOrDefault(c => c.name == name);
+		public int Length => _inner.Length;
+        IEnumerator IEnumerable.GetEnumerator() => _inner.GetEnumerator();
+        public IEnumerator<Cookie> GetEnumerator()
+		{
+            for (int i = 0; i < Length; i++)
+                yield return _inner[i];
+		}
+    }
 }
