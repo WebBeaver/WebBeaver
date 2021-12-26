@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using WebBeaver.Framework;
 
@@ -13,7 +12,7 @@ namespace WebBeaver
 		public string Url { get; }
 		public string HttpVersion { get; }
 		public IPEndPoint IP { get; internal set; }
-		public Cookie[] Cookies { get; }
+		public CookieArray Cookies { get; }
 		public WebCollection<string, string> Headers { get; }
 		public WebCollection<string, string> Params { get; internal set; }
 		public WebCollection<string, string> Body { get; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WebBeaver.Framework;
 
 namespace WebBeaver
 {
@@ -39,7 +40,7 @@ namespace WebBeaver
 			return result.ToString();
 		}
 
-		public static Cookie[] Parse(string header)
+		public static CookieArray Parse(string header)
 		{
 			List<Cookie> cookies = new List<Cookie>();
 			string[] baseCookies = header.Split(';');
@@ -48,7 +49,7 @@ namespace WebBeaver
 				string[] keyVal = baseCookies[i].Split('=');
 				cookies.Add(new Cookie() { name = keyVal[0], value = keyVal[1] });
 			}
-			return cookies.ToArray();
+			return new CookieArray(cookies.ToArray());
 		}
 	}
 }
