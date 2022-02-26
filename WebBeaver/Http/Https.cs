@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WebBeaver
 {
@@ -48,18 +49,26 @@ namespace WebBeaver
                 // Wait for a request
                 TcpClient client = _tcp.AcceptTcpClient();
 
-                // Get the request from a NetworkStream
-                using (SslStream stream = new SslStream(client.GetStream(), false, ValidateCertificate))
+                // Run the request in a task
+                new Task(() =>
                 {
-                    stream.AuthenticateAsServer(Cert, false, SslProtocols.Tls12, false);
-                    // Get the request
-                    Request request = GetRequest(stream);
+                    // Get the request from a SslStream
+                    using (SslStream stream = new SslStream(client.GetStream(), false, ValidateCertificate))
+                    {
+                        // Authenticate the server certificate
+                        stream.AuthenticateAsServer(Cert, false, SslProtocols.Tls12, false);
 
-                    // Check if we realy got a request
-                    if (request == null) continue;
+                        // Get the request
+                        Request request = GetRequest(stream);
 
-                    onRequest.Invoke(request, new Response(stream, request));
-                }
+                        // Check if we realy got a request
+                        if (request == null) return;
+
+                        request.IP = client.Client.RemoteEndPoint as IPEndPoint;
+
+                        onRequest.Invoke(request, new Response(stream, request));
+                    }
+                }).Start();
             }
         }
 

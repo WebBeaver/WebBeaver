@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace WebBeaver
 {
@@ -49,19 +50,23 @@ namespace WebBeaver
 				// Wait for a request
 				TcpClient client = _tcp.AcceptTcpClient();
 
-				// Get the request from a NetworkStream
-				using (NetworkStream stream = client.GetStream())
-				{
-					// Get the request
-					Request request = GetRequest(stream);
+                // Run the request in a task
+                new Task(() =>
+                {
+                    // Get the request from a NetworkStream
+                    using (NetworkStream stream = client.GetStream())
+                    {
+                        // Get the request
+                        Request request = GetRequest(stream);
 
-					// Check if we realy got a request
-					if (request == null) continue;
+                        // Check if we realy got a request
+                        if (request == null) return;
 
-                    request.IP = client.Client.RemoteEndPoint as IPEndPoint;
+                        request.IP = client.Client.RemoteEndPoint as IPEndPoint;
 
-                    onRequest.Invoke(request, new Response(stream, request));
-				}
+                        onRequest.Invoke(request, new Response(stream, request));
+                    }
+                }).Start();
 			}
 		}
 
