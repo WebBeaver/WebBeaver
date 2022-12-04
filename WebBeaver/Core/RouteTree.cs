@@ -20,9 +20,12 @@ POST /users
 	internal class RouteTree
 	{
 		public StaticNode Root { get; }
-		public RouteTree()
+		private Router _router;
+
+		public RouteTree(Router router)
 		{
 			Root = new StaticNode("");
+			_router = router;
 		}
 
 		public void Insert(RouteAttribute route)
@@ -41,7 +44,9 @@ POST /users
 
 			// Then insert our record
 			//
-			Console.WriteLine("InsertRecord({0}, {1})", route.Route, methodNode.Name);
+			_router.WriteLog(LogType.Trace,
+				string.Format("RouteTree.InsertRecord({0}, {1})", route.Route, methodNode.Name)
+			);
 			//InsertRecord(route, route.Route, methodNode);
 
 			// Check if we got an index route

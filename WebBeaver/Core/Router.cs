@@ -9,9 +9,9 @@ namespace WebBeaver.Core
 		#region Properties
 		// Events
 		public event MiddlewareEventHandler middleware;
-		public event RequestEventHandler onRequestError;
+		public event EventHandler<Collections.LogInfo> onLogMessage;
 
-		private RouteTree _tree = new RouteTree();
+		private RouteTree _tree;
 		private Func<string, object, string>? _templateEngine = null;
 		#endregion
 
@@ -19,11 +19,20 @@ namespace WebBeaver.Core
 		{
 			//Engine = new Dictionary<string, Func<string, object, string>>();
 			server.onRequest += OnIncomingRequest;
+
+			_tree = new RouteTree(this);
 		}
-		
+
+		/// <summary>
+		/// Write a log to our onLogMessage event
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="message"></param>
+		internal void WriteLog(LogType type, string message) => onLogMessage.Invoke(this, new Collections.LogInfo(type, message));
+
 		private void OnIncomingRequest(Request req, Response res)
 		{
-			Console.WriteLine("Incomming request: " + req.Method + ' ' + req.Url);
+			WriteLog(LogType.Info, req.Method + ' ' + req.Url);
 
 			// If we have middleware run it and check it's output
 			//

@@ -6,4 +6,13 @@ using System.Threading.Tasks;
 
 namespace WebBeaver
 {
+	public enum LogType
+	{
+		Fatal,
+		Error,
+		Warning,
+		Info,
+		Debug,
+		Trace,
+	}
 }

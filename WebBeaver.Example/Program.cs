@@ -18,6 +18,28 @@ server.Certificate(
 // Create a new router
 Router router = new Router(server);
 
+// Handler the log messages the router sends
+router.onLogMessage += (sender, log) =>
+{
+	switch (log.Type)
+	{
+		case WebBeaver.LogType.Fatal:
+		case WebBeaver.LogType.Error:
+			Console.ForegroundColor = ConsoleColor.Red;
+			break;
+		case WebBeaver.LogType.Warning:
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			break;
+		case WebBeaver.LogType.Info:
+			Console.ForegroundColor = ConsoleColor.Blue;
+			break;
+		default:
+			Console.ForegroundColor = ConsoleColor.Magenta;
+			break;
+	}
+	Console.WriteLine("[{0}] [{1}] {2}", log.Timestamp, log.Type, log.Message);
+};
+
 // All static file requests will go to the 'public' folder
 router.Static("public");
 
