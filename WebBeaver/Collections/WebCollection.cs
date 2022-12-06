@@ -46,23 +46,4 @@ namespace WebBeaver.Collections
                 yield return new KeyValuePair<TKey, TValue>(Keys[i], Values[i]);
         }
 	}
-
-    public class CookieArray : IEnumerable<Cookie>, IEnumerable
-    {
-        private Cookie[] _inner;
-        public CookieArray(Cookie[] contents)
-		{
-            _inner = contents;
-		}
-        public Cookie this[string name] => _inner.FirstOrDefault(c => c.name == name);
-        public bool ContainsKey(string key) => (object)_inner.FirstOrDefault(c => c.name == key) != null;
-
-        public int Length => _inner.Length;
-        IEnumerator IEnumerable.GetEnumerator() => _inner.GetEnumerator();
-        public IEnumerator<Cookie> GetEnumerator()
-		{
-            for (int i = 0; i < Length; i++)
-                yield return _inner[i];
-		}
-    }
 }

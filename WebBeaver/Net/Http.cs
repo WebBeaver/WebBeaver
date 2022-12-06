@@ -6,16 +6,37 @@ using WebBeaver.Interfaces;
 
 namespace WebBeaver.Net
 {
+	/// <summary>
+	/// An object that handles http requests.
+	/// </summary>
 	public class Http : IHttpServer
 	{
+		/// <summary>
+		/// The port the server will listen to.
+		/// </summary>
 		public int Port { get; }
+		/// <summary>
+		/// The root directory (project or dll folder).
+		/// </summary>
 		public static string? RootDirectory { get; set; }
 
+		/// <summary>
+		/// An event that is fired for every incoming request.
+		/// </summary>
 		public event RequestEventHandler onRequest;
 
 		private TcpListener _tcp;
 
+		/// <summary>
+		/// Creates an http server.
+		/// </summary>
+		/// <param name="port">Port to listen to</param>
 		public Http(int port) : this(IPAddress.Any, port) { }
+		/// <summary>
+		/// Creates an http server.
+		/// </summary>
+		/// <param name="address">Address to listen to</param>
+		/// <param name="port">Port to listen to</param>
 		public Http(IPAddress address, int port)
 		{
 			if (RootDirectory == null)
@@ -38,6 +59,9 @@ namespace WebBeaver.Net
 			_tcp = new TcpListener(address, port);
 		}
 
+		/// <summary>
+		/// Start the http server.
+		/// </summary>
 		public void Start()
 		{
 			_tcp.Start();
@@ -56,10 +80,6 @@ namespace WebBeaver.Net
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="client"></param>
 		private void HandleRequest(object? client)
 		{
 			try

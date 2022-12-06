@@ -4,11 +4,20 @@ using WebBeaver.Net;
 
 namespace WebBeaver.Core
 {
+	/// <summary>
+	/// An class that handles routing for the WebBeaver framework.
+	/// </summary>
 	public class Router : IRouter
 	{
 		#region Properties
 		// Events
+		/// <summary>
+		/// An event that is run before routing.
+		/// </summary>
 		public event MiddlewareEventHandler middleware;
+		/// <summary>
+		/// An event where all log messages for the router are pushed.
+		/// </summary>
 		public event EventHandler<Collections.LogInfo> onLogMessage;
 
 		private RouteTree _tree;
@@ -104,6 +113,13 @@ namespace WebBeaver.Core
 		}
 
 		#region Import methods
+		/// <summary>
+		/// Imports a endpoint (method) and adds it to the route tree
+		/// </summary>
+		/// <param name="method"></param>
+		/// <param name="baseRoute"></param>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="Exception"></exception>
 		private void Import(Action<Request, Response> method, string baseRoute)
 		{
 			// Validate arguments
@@ -132,10 +148,13 @@ namespace WebBeaver.Core
 			// Add the attribute to our routeTree
 			_tree.Insert(attribute);
 		}
+		/// <summary>
+		/// Imports a endpoint (method) and adds it to the route tree
+		/// </summary>
 		public void Import(Action<Request, Response> method) => Import(method, string.Empty);
 
 		/// <summary>
-		/// Import all routes from the given class
+		/// Import all endpoint (static) methods from the given class.
 		/// </summary>
 		/// <typeparam name="T">Class to get routes from</typeparam>
 		public void Import<T>() where T : class

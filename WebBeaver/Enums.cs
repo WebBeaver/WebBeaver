@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WebBeaver
+﻿namespace WebBeaver
 {
+	/// <summary>
+	/// The type of the log
+	/// </summary>
 	public enum LogType
 	{
 		Fatal,

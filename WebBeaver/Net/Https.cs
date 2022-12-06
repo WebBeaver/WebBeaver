@@ -1,30 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 using WebBeaver.Interfaces;
 
 namespace WebBeaver.Net
 {
+	/// <summary>
+	/// An object that handles http requests.
+	/// </summary>
 	public class Https : IHttpServer
 	{
+		/// <summary>
+		/// The port the server will listen to.
+		/// </summary>
 		public int Port { get; }
+		/// <summary>
+		/// The certificate we use for TLS
+		/// </summary>
 		public X509Certificate2 Cert { get; private set; }
 
+		/// <summary>
+		/// The root directory (project or dll folder).
+		/// </summary>
 		public static string? RootDirectory { get; set; }
 
+		/// <summary>
+		/// An event that is fired for every incoming request.
+		/// </summary>
 		public event RequestEventHandler onRequest;
 
 		private TcpListener _tcp;
 
+		/// <summary>
+		/// Creates an https server.
+		/// </summary>
+		/// <param name="port">Port to listen to</param>
 		public Https(int port) : this(IPAddress.Any, port) { }
+		/// <summary>
+		/// Creates an https server.
+		/// </summary>
+		/// <param name="address">Address to listen to</param>
+		/// <param name="port">Port to listen to</param>
 		public Https(IPAddress address, int port)
 		{
 			if (RootDirectory == null)
@@ -48,11 +68,14 @@ namespace WebBeaver.Net
 		}
 
 		/// <summary>
-		/// Sets the Certificate
+		/// Sets the Certificate that the server should use.
 		/// </summary>
 		/// <param name="cert"></param>
 		public void Certificate(X509Certificate2 cert) => Cert = cert;
 
+		/// <summary>
+		/// Start the https server.
+		/// </summary>
 		public void Start()
 		{
 			if (Cert == null)
@@ -75,10 +98,6 @@ namespace WebBeaver.Net
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="client"></param>
 		private void HandleRequest(object? client)
 		{
 			try

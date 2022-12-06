@@ -1,24 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 using System.Text.RegularExpressions;
 using WebBeaver.Collections;
 
 namespace WebBeaver.Net
 {
+	/// <summary>
+	/// An object that holds http request data.
+	/// </summary>
 	public class Request
 	{
 		//public WebCollection<string, object> user = new WebCollection<string, object>();
+		/// <summary>
+		/// The http request method. (GET, POST, PATCH, PUT, etc)
+		/// </summary>
 		public string Method { get; private set; }
+		/// <summary>
+		/// The request url.
+		/// </summary>
 		public string Url { get; private set; }
+		/// <summary>
+		/// The http version used.
+		/// </summary>
 		public string HttpVersion { get; private set; }
+		/// <summary>
+		/// The IP of the sender.
+		/// </summary>
 		public IPEndPoint IP { get; internal set; }
+		/// <summary>
+		/// Cookies found in the request.
+		/// </summary>
 		public CookieArray Cookies { get; private set; }
+		/// <summary>
+		/// A collection of Http headers.
+		/// </summary>
 		public WebCollection<string, string> Headers { get; private set; }
+		/// <summary>
+		/// A collection of url parameters. (/:id -> id=value)
+		/// </summary>
 		public WebCollection<string, string> Params { get; internal set; }
+		/// <summary>
+		/// The body of the request. If not parsed the object contains a string.
+		/// </summary>
 		public object body;
+		/// <summary>
+		/// A collection of url query parameters. (?param1=value&2=value)
+		/// </summary>
 		public WebCollection<string, string> Query { get; private set; }
 
 		public Request()
@@ -28,6 +54,11 @@ namespace WebBeaver.Net
 			Query = new WebCollection<string, string>();
 		}
 		
+		/// <summary>
+		/// Parses an http request to an Request object.
+		/// </summary>
+		/// <param name="httpRequestRaw">The raw http request string</param>
+		/// <returns></returns>
 		public static Request ParseHttp(string httpRequestRaw)
 		{
 			Request result = new Request();

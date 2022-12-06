@@ -1,17 +1,22 @@
 ﻿using MimeTypes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using WebBeaver.Collections;
 
 namespace WebBeaver.Net
 {
+	/// <summary>
+	/// An object for creating a http response that will be send back.
+	/// </summary>
 	public class Response
 	{
+		/// <summary>
+		/// The http status code.
+		/// </summary>
 		public int status = 200;
+		/// <summary>
+		/// A collection of http headers.
+		/// </summary>
 		public WebCollection<string, string> Headers { get; }
 
 		private Stream _stream;
@@ -33,7 +38,7 @@ namespace WebBeaver.Net
 
 		/// <summary>
 		/// Renders a file with the set template engine.
-		/// <para>You can set a template engine using the Router.SetTemplateEngine method</para>
+		/// <para>You can set a template engine using the Router.SetTemplateEngine method.</para>
 		/// </summary>
 		/// <param name="path">Path to the file to render</param>
 		/// <param name="args">Arguments to give to the file</param>
@@ -77,12 +82,12 @@ namespace WebBeaver.Net
 		}
 
 		/// <summary>
-		/// Sends string as html to the client
+		/// Sends string as html to the client.
 		/// </summary>
 		public void Send(string rawHtml) => Send("text/html", rawHtml);
 
 		/// <summary>
-		/// Send data to the client
+		/// Send data to the client.
 		/// </summary>
 		/// <param name="memeType">Content meme type</param>
 		/// <param name="content">Content data</param>
@@ -121,9 +126,9 @@ namespace WebBeaver.Net
 		}
 
 		/// <summary>
-		/// Sends file data to the client
+		/// Sends file data to the client.
 		/// </summary>
-		/// <param name="path">File path in project/dll directory to send</param>
+		/// <param name="path">File path starting with Http.RootDirectory (project/dll directory) to send.</param>
 		public void SendFile(string path)
 		{
 			// Check if parameter Path exists
@@ -147,7 +152,7 @@ namespace WebBeaver.Net
 		}
 
 		/// <summary>
-		/// Send a status message
+		/// Send a status message.
 		/// </summary>
 		public void SendStatus(int status)
 		{
@@ -156,7 +161,7 @@ namespace WebBeaver.Net
 		}
 
 		/// <summary>
-		/// Sets the http status code for our response
+		/// Sets the http status code for our response.
 		/// </summary>
 		/// <param name="status"></param>
 		/// <returns></returns>
@@ -166,7 +171,7 @@ namespace WebBeaver.Net
 			return this;
 		}
 		/// <summary>
-		/// Sets the http status code for our response
+		/// Sets the http status code for our response.
 		/// </summary>
 		/// <param name="status"></param>
 		/// <returns></returns>
@@ -177,7 +182,7 @@ namespace WebBeaver.Net
 		}
 
 		/// <summary>
-		/// Redirect to an other url
+		/// Redirect to an other url.
 		/// </summary>
 		/// <param name="path">url to redirect to</param>
 		public void Redirect(string path)
@@ -193,6 +198,10 @@ namespace WebBeaver.Net
 			WriteResponse($"{_httpVersion} 302 {GetStatusMessage(302)}\nLocation: {path}");
 		}
 
+		/// <summary>
+		/// Adds a set cookie header with the given cookie data.
+		/// </summary>
+		/// <param name="cookie">Cookie to set</param>
 		public void SetCookie(Cookie cookie) => Headers.Add("Set-Cookie", cookie.ToString());
 
 		/// <summary>
@@ -225,6 +234,11 @@ namespace WebBeaver.Net
 			}
 		}
 
+		/// <summary>
+		/// Gets the string message for a http status code.
+		/// </summary>
+		/// <param name="status"></param>
+		/// <returns></returns>
 		public static string GetStatusMessage(int status)
 		{
 			#region [Status]

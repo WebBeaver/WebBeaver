@@ -15,6 +15,11 @@ namespace WebBeaver.Collections
 		public string Message { get; }
 		public DateTime Timestamp { get; }
 
+		/// <summary>
+		/// Creates a log info object
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="message"></param>
 		public LogInfo(LogType type, string message)
 		{
 			Type = type;

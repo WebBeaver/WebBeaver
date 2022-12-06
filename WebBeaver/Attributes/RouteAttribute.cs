@@ -8,16 +8,19 @@ using WebBeaver.Net;
 
 namespace WebBeaver
 {
+	/// <summary>
+	/// An attribute used for setting route data for an endpoint.
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
 	public class RouteAttribute : Attribute
 	{
 		/// <summary>
-		/// If the route contains parameters like :id
+		/// If the route contains parameters like :id.
 		/// </summary>
 		public bool HasParams { get; private set; }
 
 		/// <summary>
-		/// Http method
+		/// Http method.
 		/// </summary>
 		public string Method { get; }
 		public string Route { get; internal set; }

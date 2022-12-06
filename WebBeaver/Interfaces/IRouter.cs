@@ -3,6 +3,9 @@ using WebBeaver.Net;
 
 namespace WebBeaver.Interfaces
 {
+	/// <summary>
+	/// An interface for implementing a router.
+	/// </summary>
 	internal interface IRouter
 	{
 		public event MiddlewareEventHandler middleware;
