@@ -37,7 +37,7 @@ router.onLogMessage += (sender, log) =>
 			Console.ForegroundColor = ConsoleColor.Magenta;
 			break;
 	}
-	Console.WriteLine("[{0}] [{1}] {2}", log.Timestamp, log.Type, log.Message);
+	Console.WriteLine("[{0}] [{1}]\t{2}", log.Timestamp, log.Type, log.Message);
 };
 
 // All static file requests will go to the 'public' folder
@@ -57,7 +57,7 @@ router.SetTemplateEngine((file, args) =>
 });
 
 // Add middleware that will parse our body
-router.middleware += (Request req, Response res) =>
+/*router.middleware += (Request req, Response res) =>
 {
 	if (req.Headers.ContainsKey("Content-Type"))
 	{
@@ -71,7 +71,7 @@ router.middleware += (Request req, Response res) =>
 		}
 	}
 	return true; // Continue
-};
+};*/
 
 // Import our routes
 router.Import<HomeController>();

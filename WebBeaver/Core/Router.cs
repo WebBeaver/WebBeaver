@@ -41,12 +41,11 @@ namespace WebBeaver.Core
 
 		private void OnIncomingRequest(Request req, Response res)
 		{
-			WriteLog(LogType.Info, req.Method + ' ' + req.Url);
-
 			// If we have middleware run it and check it's output
 			//
 			if (middleware != null && !middleware.Invoke(req, res))
 			{
+				EndRequest(req, res);
 				return; // When middleware returns false we won't continue
 			}
 
@@ -57,8 +56,8 @@ namespace WebBeaver.Core
 			//
 			if (routeNode == null)
 			{
-				// TODO: Log an warning or error
 				res.Status(404);
+				EndRequest(req, res);
 				return;
 			}
 
@@ -67,6 +66,7 @@ namespace WebBeaver.Core
 			if (routeNode.Handler == null)
 			{
 				res.Status(404);
+				EndRequest(req, res);
 				return;
 			}
 
@@ -74,7 +74,29 @@ namespace WebBeaver.Core
 			res.templateEngine = _templateEngine;
 
 			// Call the handler with our request and response objects
-			routeNode.Handler.Invoke(req, res);
+			try
+			{
+				routeNode.Handler.Invoke(req, res);
+			}
+			catch (Exception e)
+			{
+				WriteLog(LogType.Error, e.ToString());
+			}
+			EndRequest(req, res);
+		}
+		private void EndRequest(Request req, Response res)
+		{
+			LogType logType = LogType.Info;
+			if (res.status >= 400)
+			{
+				logType = LogType.Error;
+			}
+			else if (res.status >= 300)
+			{
+				logType = LogType.Warning;
+			}
+
+			WriteLog(logType, req.Method + ' ' + req.Url + ' ' + res.status);
 		}
 
 		/// <summary>
@@ -105,7 +127,7 @@ namespace WebBeaver.Core
 					}
 
 					// Send the contents for the requested file
-					res.SendFile(filePath);
+					res.Status(200).SendFile(filePath);
 					return false;
 				}
 				return true; // Continue
