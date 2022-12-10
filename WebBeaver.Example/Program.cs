@@ -77,5 +77,14 @@ router.middleware += (Request req, Response res) =>
 router.Import<HomeController>();
 router.Import<ApiController>();
 
+// An example on how to use regex in a route
+//
+[Route("/id_example/:id(^[0-9]+$)")]
+void ExampleNumberID(Request req, Response res)
+{
+	res.Send("The given id matches regex pattern '^[0-9]+$'!");
+}
+router.Import(ExampleNumberID);
+
 // Start the http server
 server.Start();

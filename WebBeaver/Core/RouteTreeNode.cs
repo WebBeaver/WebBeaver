@@ -3,22 +3,6 @@ using WebBeaver.Interfaces;
 
 namespace WebBeaver
 {
-	internal class RouteTreeNode
-	{
-		public string name;
-		public readonly List<RouteTreeNode> children = new List<RouteTreeNode>();
-		public RouteAttribute? route = null;
-
-		public RouteTreeNode(string name)
-		{
-			this.name = name;
-		}
-		public RouteTreeNode(string name, RouteAttribute routeInfo)
-		{
-			this.name  = name;
-			this.route = routeInfo;
-		}
-	}
 	internal class StaticNode : IRouteTreeNode
 	{
 		public string Name { get; }
