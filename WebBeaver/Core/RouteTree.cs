@@ -1,6 +1,6 @@
 ﻿using WebBeaver.Interfaces;
 
-namespace WebBeaver.Core
+namespace WebBeaver
 {
 /**
 [Example]:

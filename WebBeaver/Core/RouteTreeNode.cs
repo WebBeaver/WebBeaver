@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using WebBeaver.Interfaces;
 
-namespace WebBeaver.Core
+namespace WebBeaver
 {
 	internal class RouteTreeNode
 	{

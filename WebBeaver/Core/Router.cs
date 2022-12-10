@@ -2,7 +2,7 @@
 using WebBeaver.Interfaces;
 using WebBeaver.Net;
 
-namespace WebBeaver.Core
+namespace WebBeaver
 {
 	/// <summary>
 	/// An class that handles routing for the WebBeaver framework.
@@ -43,7 +43,7 @@ namespace WebBeaver.Core
 		{
 			// If we have middleware run it and check it's output
 			//
-			if (middleware != null && !middleware.Invoke(req, res))
+			if (middleware != null && !GetMiddlewareResult(req, res))
 			{
 				EndRequest(req, res);
 				return; // When middleware returns false we won't continue
@@ -97,6 +97,20 @@ namespace WebBeaver.Core
 			}
 
 			WriteLog(logType, req.Method + ' ' + req.Url + ' ' + res.status);
+		}
+
+		public bool GetMiddlewareResult(Request req, Response res)
+		{
+			foreach (Delegate middleware in middleware.GetInvocationList())
+			{
+				bool Continue = (bool)middleware.DynamicInvoke(req, res);
+
+				if (!Continue)
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 
 		/// <summary>

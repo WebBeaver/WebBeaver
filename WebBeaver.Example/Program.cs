@@ -1,5 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
-using WebBeaver.Core;
+using WebBeaver;
 using WebBeaver.Net;
 using WebBeaver.Example.Controller;
 using Newtonsoft.Json.Linq;
@@ -57,7 +57,7 @@ router.SetTemplateEngine((file, args) =>
 });
 
 // Add middleware that will parse our body
-/*router.middleware += (Request req, Response res) =>
+router.middleware += (Request req, Response res) =>
 {
 	if (req.Headers.ContainsKey("Content-Type"))
 	{
@@ -71,7 +71,7 @@ router.SetTemplateEngine((file, args) =>
 		}
 	}
 	return true; // Continue
-};*/
+};
 
 // Import our routes
 router.Import<HomeController>();

@@ -20,8 +20,12 @@
     <Folder Include="Model\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="public\" />
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if not exist $(ProjectDir)$(OutDir)view mkdir &quot;$(ProjectDir)$(OutDir)view&quot;&#xD;&#xA;Xcopy /E /H /C /I &quot;$(ProjectDir)view&quot; &quot;$(ProjectDir)$(OutDir)view&quot;&#xD;&#xA;&#xD;&#xA;if not exist &quot;$(ProjectDir)$(OutDir)public&quot; mkdir &quot;$(ProjectDir)$(OutDir)public&quot;&#xD;&#xA;Xcopy /E /H /C /I &quot;$(ProjectDir)public&quot; &quot;$(ProjectDir)$(OutDir)public&quot;" />
+    <Exec Command="if not exist &quot;$(ProjectDir)$(OutDir)view&quot; mkdir &quot;$(ProjectDir)$(OutDir)view&quot;&#xD;&#xA;Xcopy /E /H /C /I &quot;$(ProjectDir)view&quot; &quot;$(ProjectDir)$(OutDir)view&quot;&#xD;&#xA;&#xD;&#xA;if not exist &quot;$(ProjectDir)$(OutDir)public&quot; mkdir &quot;$(ProjectDir)$(OutDir)public&quot;&#xD;&#xA;Xcopy /E /H /C /I &quot;$(ProjectDir)public&quot; &quot;$(ProjectDir)$(OutDir)public&quot;" />
   </Target>
 
 </Project>
