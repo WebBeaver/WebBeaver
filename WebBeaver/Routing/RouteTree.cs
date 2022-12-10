@@ -1,6 +1,6 @@
 ﻿using WebBeaver.Interfaces;
 
-namespace WebBeaver
+namespace WebBeaver.Routing
 {
 /**
 [Example]:

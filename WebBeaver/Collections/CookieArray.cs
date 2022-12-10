@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace WebBeaver.Collections
+namespace WebBeaver.Net
 {
 	/// <summary>
 	/// An array of cookie objects.

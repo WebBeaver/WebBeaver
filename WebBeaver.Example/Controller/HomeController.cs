@@ -1,4 +1,4 @@
-﻿using WebBeaver;
+﻿using WebBeaver.Routing;
 using WebBeaver.Net;
 
 namespace WebBeaver.Example.Controller

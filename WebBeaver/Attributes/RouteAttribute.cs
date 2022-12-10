@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using WebBeaver.Net;
 
-namespace WebBeaver
+namespace WebBeaver.Routing
 {
 	/// <summary>
 	/// An attribute used for setting route data for an endpoint.

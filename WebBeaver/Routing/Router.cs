@@ -2,7 +2,7 @@
 using WebBeaver.Interfaces;
 using WebBeaver.Net;
 
-namespace WebBeaver
+namespace WebBeaver.Routing
 {
 	/// <summary>
 	/// An class that handles routing for the WebBeaver framework.

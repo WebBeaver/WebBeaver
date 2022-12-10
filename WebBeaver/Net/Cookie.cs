@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using WebBeaver.Collections;
 
-namespace WebBeaver
+namespace WebBeaver.Net
 {
 	/// <summary>
 	/// An object that stores information about a cookie.

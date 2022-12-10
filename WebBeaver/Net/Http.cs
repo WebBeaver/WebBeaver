@@ -125,7 +125,7 @@ namespace WebBeaver.Net
 					return null; // The client has disconected
 				memoryStream.Write(data, 0, size);
 			} while (stream.DataAvailable);
-
+			Console.WriteLine(Encoding.UTF8.GetString(memoryStream.ToArray()));
 			return Request.ParseHttp(Encoding.UTF8.GetString(memoryStream.ToArray()));
 		}
 	}
