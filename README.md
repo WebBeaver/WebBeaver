@@ -5,8 +5,7 @@
 
 ## Installation
 
-You can install WebBeaver with [NuGet](https://www.nuget.org/packages/WebBeaver),
-or by importing the dll found in the [release](https://github.com/RickLugtigheid/Web-Beaver/releases/latest) you want to use.
+You can install WebBeaver with [NuGet](https://www.nuget.org/packages/WebBeaver).
 
 ## Example
 ```cs
@@ -29,7 +28,7 @@ class Program
 		server.Start();
 	}
 	[Route("/")]
-	static void Home(Request req, Response res)
+	static void Index(Request req, Response res)
 	{
 		res.SendFile("/view/index.html");
 	}

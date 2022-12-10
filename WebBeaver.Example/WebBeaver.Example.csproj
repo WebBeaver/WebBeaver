@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebBeaver\WebBeaver.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Scriban.Signed" Version="5.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="public\" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="rmdir /s /q &quot;$(ProjectDir)$(OutDir)view&quot; 2&gt;nul&#xD;&#xA;mkdir &quot;$(ProjectDir)$(OutDir)view&quot;&#xD;&#xA;Xcopy /E /H /C /I &quot;$(ProjectDir)view&quot; &quot;$(ProjectDir)$(OutDir)view&quot;&#xD;&#xA;&#xD;&#xA;rmdir /s /q &quot;$(ProjectDir)$(OutDir)public&quot; 2&gt;nul&#xD;&#xA;mkdir &quot;$(ProjectDir)$(OutDir)public&quot;&#xD;&#xA;Xcopy /E /H /C /I &quot;$(ProjectDir)public&quot; &quot;$(ProjectDir)$(OutDir)public&quot;" />
+  </Target>
+
+</Project>

@@ -1,15 +1,45 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>1.3.0</Version>
-    <Authors>Rick Lugtigheid</Authors>
-    <Company />
-    <Product />
-    <PackageTags>webframework web framework http https c# router library</PackageTags>
-    <RepositoryUrl>https://github.com/RickLugtigheid/WebBeaver</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Title>WebBeaver</Title>
+    <Description>WebBeaver is a flexible and minimalist web framework for c#.
+With this framework you can control your project layout (Do you want a simple website or use MVC?), what template engine to use, how your request body should be parsed, and more.</Description>
+    <PackageTags>web, framework, http, https, c#, router, library</PackageTags>
+    <AssemblyVersion>2.0</AssemblyVersion>
     <PackageProjectUrl>https://github.com/RickLugtigheid/WebBeaver</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>2.0</Version>
+    <RepositoryType>git</RepositoryType>
+    <FileVersion>2.0</FileVersion>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <Authors>Rick Lugtigheid</Authors>
+    <Copyright />
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Builders\" />
+    <Folder Include="IO\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md" />
+    <None Include="C:\Users\rlugt\source\repos\web-beaver\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
+  </ItemGroup>
 
 </Project>
