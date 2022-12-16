@@ -9,8 +9,8 @@ You can install WebBeaver with [NuGet](https://www.nuget.org/packages/WebBeaver)
 
 ## Example
 ```cs
-using WebBeaver;
-using WebBeaver.Framework;
+using WebBeaver.Routing;
+using WebBeaver.Net;
 class Program
 {
 	static void Main(string[] args)
@@ -20,6 +20,13 @@ class Program
 
 		// Create a new router that uses our webserver
 		Router router = new Router(server);
+
+		// Handle the log messages the router sends
+		router.onLogMessage += (sender, log) =>
+		{
+			Console.WriteLine("[{0}] [{1}]\t{2}", log.Timestamp, log.Type, log.Message);
+		};
+
 
 		// Import routes
 		router.Import(Home);
