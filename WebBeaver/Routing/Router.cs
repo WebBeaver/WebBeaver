@@ -37,7 +37,7 @@ namespace WebBeaver.Routing
 		/// </summary>
 		/// <param name="type"></param>
 		/// <param name="message"></param>
-		internal void WriteLog(LogType type, string message) => onLogMessage.Invoke(this, new Collections.LogInfo(type, message));
+		internal void WriteLog(LogType type, string message) => onLogMessage?.Invoke(this, new Collections.LogInfo(type, message));
 
 		private void OnIncomingRequest(Request req, Response res)
 		{
