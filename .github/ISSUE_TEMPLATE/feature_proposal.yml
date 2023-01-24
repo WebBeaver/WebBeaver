@@ -1,0 +1,31 @@
+name: Feature Proposal
+description: Propose/Request a new feature/change.
+title: "[Feature Request]: "
+labels: ["enhancement", "Type: Feature Request", "Type: Change request", "NEW ISSUE"] 
+body:
+- type: dropdown
+  id: contribute
+  attributes:
+    label: Do you intend to personally create (program) this feature/change?
+    description: If you feel confident that you can contribute this feature, feel free to work on it after getting some initial feedback. If you can't, don't worry, there may be people who can help if they like your sugestion.
+    multiple: false
+    options:
+      - 'Yes'
+      - 'No'
+  validations:
+    required: true
+- type: textarea
+  id: description
+  attributes: 
+    label: Description
+    description: |
+      Describe your proposal.
+- type: textarea
+  id: why
+  attributes:
+    label: What does this proposal attempt to solve or improve?
+    description: |
+      Describe how your proposal is beneficial for the Framework. Please list an example use case for this new feature or change.
+    placeholder: |
+      It is currently impossible to ...
+      This new feature would allow a developer to ...

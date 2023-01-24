@@ -1,0 +1,69 @@
+name: Bug Report
+description: Report a bug in this library.
+title: "[Bug]: "
+labels: ["bug", "Type: Bug Report", "NEW ISSUE"] 
+body:
+- type: markdown
+  attributes:
+    value: |
+      ## Is there an existing issue for this?
+      Please check to see if an issue already exists for the bug you encountered before creating a new issue.
+- type: dropdown
+  attributes:
+    label: Version
+    description: What version are you running?
+    multiple: false
+    options:
+      - Lastest v2.0.1
+      - Lastest v2.0
+      - Old v1.3
+      - Older version (please specify number)
+      - Self-Compiled (please specify branch)
+  validations:
+    required: true
+- type: dropdown
+  attributes:
+    label: OS
+    description: What OS are you on?
+    multiple: false
+    options:
+      - Windows
+      - Mac
+      - Linux (please specify name)
+      - Other (please specify)
+  validations:
+    required: true     
+- type: textarea
+  attributes:
+    label: Description
+    id: description
+    description: |
+      Describe your issue(s) / bug(s) here.
+- type: textarea
+  attributes:
+    label: Steps to reproduce
+    description: Please describe the steps to reproduce this issue
+    placeholder: |
+      1. [First Step]
+      2. [Second Step]
+      3. [And so on...]
+- type: textarea
+  attributes:
+    label: Expected Behavior
+    description: |
+      What should be happening? If you don't know, leave what you think should happen
+- type: textarea
+  attributes:
+    label: Actual Behavior
+    description: |
+      What is actually happening?
+- type: textarea
+  attributes:
+    label: Reproduction frequency
+    description: |
+      How often are you reliably able to reproduce this issue?
+- type: textarea
+  attributes:
+    label: Additional Information
+    description: |
+       Any additional information, code, or data that might be necessary to reproduce the bugs.
