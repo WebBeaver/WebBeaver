@@ -1,11 +1,16 @@
-# WebBeaver
-##### WebBeaver is a flexible web framework for c#.
+# WebBeaver | Web Framework
 [![Version](https://img.shields.io/nuget/v/WebBeaver)](https://www.nuget.org/packages/WebBeaver)
 [![Downloads](https://img.shields.io/nuget/dt/WebBeaver)](https://www.nuget.org/packages/WebBeaver)
+
+## What is WebBeaver?
+WebBeaver is a flexible web framework for c#.
+
+The goal is to make a Web Framework where the user can control the project layout, what template engine to use, how your request body should be parsed, and more.
 
 ## Installation
 
 You can install WebBeaver with [NuGet](https://www.nuget.org/packages/WebBeaver).
+
 
 ## Example
 ```cs
@@ -41,3 +46,9 @@ class Program
 	}
 }
 ```
+
+
+## SECURITY
+
+For help with securing your WebBeaver website check the [security information document](https://github.com/WebBeaver/WebBeaver/wiki/Security-Information-Document).
+
