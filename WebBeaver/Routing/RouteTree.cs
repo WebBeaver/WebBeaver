@@ -1,4 +1,5 @@
-﻿using WebBeaver.Interfaces;
+﻿using System;
+using WebBeaver.Interfaces;
 
 namespace WebBeaver.Routing
 {

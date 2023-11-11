@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.IO;
+using System.Reflection;
 using WebBeaver.Interfaces;
 using WebBeaver.Net;
 
@@ -37,7 +39,7 @@ namespace WebBeaver.Routing
 		/// </summary>
 		/// <param name="type"></param>
 		/// <param name="message"></param>
-		internal void WriteLog(LogType type, string message) => onLogMessage.Invoke(this, new Collections.LogInfo(type, message));
+		internal void WriteLog(LogType type, string message) => onLogMessage?.Invoke(this, new Collections.LogInfo(type, message));
 
 		private void OnIncomingRequest(Request req, Response res)
 		{
@@ -192,11 +194,13 @@ namespace WebBeaver.Routing
 		/// <summary>
 		/// Import all endpoint (static) methods from the given class.
 		/// </summary>
-		/// <typeparam name="T">Class to get routes from</typeparam>
-		public void Import<T>() where T : class
-		{
-			Type classType = typeof(T);
+		/// <typeparam name="T">Class to get routes from.</typeparam>
+		public void Import<T>() where T : class => Import(typeof(T));
 
+		/// <inheritdoc cref="Import{T}"/>
+		/// <param name="classType">Typeof class to get routes from.</param>
+		public void Import(Type classType)
+		{
 			// Check if our class has a Route attribute
 			// When we add a route attribute to a class we should use it as the base route for methods in class
 			string? baseRoute = classType.GetCustomAttribute<RouteAttribute>()?.Route;
@@ -207,7 +211,7 @@ namespace WebBeaver.Routing
 			{
 				// Get the route handler
 				Action<Request, Response> handler = (Action<Request, Response>)Delegate.CreateDelegate(typeof(Action<Request, Response>), method);
-				
+
 				// Import the route
 				Import(handler, baseRoute ?? string.Empty);
 			}

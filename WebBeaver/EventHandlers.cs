@@ -7,7 +7,6 @@ namespace WebBeaver
 	/// </summary>
 	/// <param name="req"></param>
 	/// <param name="res"></param>
-	/// <param name="Continue"></param>
 	/// <returns></returns>
 	public delegate bool MiddlewareEventHandler(Request req, Response res);
 
