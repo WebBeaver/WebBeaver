@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using WebBeaver.Interfaces;
 
 namespace WebBeaver.Routing

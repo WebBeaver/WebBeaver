@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFrameworks>net6.0;netstandard2.1</TargetFrameworks>
+    <!--<ImplicitUsings>enable</ImplicitUsings>-->
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Title>WebBeaver</Title>
@@ -13,7 +13,7 @@ With this framework you can control your project layout (Do you want a simple we
     <PackageProjectUrl>https://github.com/RickLugtigheid/WebBeaver</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>2.0</Version>
+    <Version>2.0.2</Version>
     <RepositoryType>git</RepositoryType>
     <FileVersion>2.0</FileVersion>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>

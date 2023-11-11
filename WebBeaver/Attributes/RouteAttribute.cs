@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using WebBeaver.Net;
 
 namespace WebBeaver.Routing
@@ -18,17 +21,20 @@ namespace WebBeaver.Routing
 		/// Http method.
 		/// </summary>
 		public string Method { get; }
+		/// <summary>
+		/// The route to match the incomming URI with.
+		/// </summary>
 		public string Route { get; internal set; }
 
 		/// <summary>
 		/// Method to run when the request uses this route
 		/// </summary>
-		public Action<Request, Response> Action { get; private set; } = null;
+		public Action<Request, Response> Action { get; private set; }
 
 		/// <summary>
 		/// The handlers attached to this route
 		/// </summary>
-		public HandlerAttribute[] Handlers { get; private set; } = null;
+		public HandlerAttribute[] Handlers { get; private set; }
 
 		/// <summary>
 		/// If the route has any handlers attached

@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace WebBeaver.Interfaces
 {
 	internal interface IRouteTreeNode

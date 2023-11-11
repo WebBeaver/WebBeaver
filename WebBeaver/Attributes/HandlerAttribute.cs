@@ -1,4 +1,5 @@
-﻿using WebBeaver.Net;
+﻿using System;
+using WebBeaver.Net;
 
 namespace WebBeaver
 {

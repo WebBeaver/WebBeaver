@@ -1,4 +1,5 @@
-﻿using WebBeaver.Collections;
+﻿using System;
+using WebBeaver.Collections;
 using WebBeaver.Net;
 
 namespace WebBeaver.Interfaces

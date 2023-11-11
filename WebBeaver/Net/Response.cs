@@ -1,4 +1,7 @@
 ﻿using MimeTypes;
+using System;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using WebBeaver.Collections;
@@ -10,6 +13,7 @@ namespace WebBeaver.Net
 	/// </summary>
 	public class Response
 	{
+		public static Encoding defaultBodyEncoding = Encoding.UTF8;
 		/// <summary>
 		/// The http status code.
 		/// </summary>
@@ -90,17 +94,17 @@ namespace WebBeaver.Net
 		/// Send data to the client.
 		/// </summary>
 		/// <param name="memeType">Content meme type</param>
-		/// <param name="content">Content data</param>
-		public void Send(string memeType, string content)
+		/// <param name="data">Content data</param>
+		public void Send(string memeType, string data)
 		{
 			// Check if our parameters exist
 			if (memeType == null)
 			{
 				throw new ArgumentNullException("memeType");
 			}
-			if (content == null)
+			if (data == null)
 			{
-				throw new ArgumentNullException("content");
+				throw new ArgumentNullException("data");
 			}
 
 			// Send a response with the content we want to send
@@ -119,25 +123,48 @@ namespace WebBeaver.Net
 				req.AppendLine(headers);
 			}
 
-			req.Append($"Content-Type: {memeType}\nContent-Length: {content.Length}\n\n{content}"); // Add our default headers
+			req.Append($"Content-Type: {memeType}\nContent-Length: {data.Length}\n\n{data}"); // Add our default headers
 
 			// Write our request to the client
 			WriteResponse(req.ToString());
+		}
+
+		/// <inheritdoc cref="Send(string, string)"/>
+		/// <param name="encoding"></param>
+		public void Send(string memeType, Stream data, Encoding? encoding = null)
+		{
+			if (encoding == null)
+			{
+				encoding = defaultBodyEncoding;
+			}
+
+			using (StreamReader reader = new StreamReader(data, encoding))
+			{
+				Send(memeType, reader.ReadToEnd());
+			}
 		}
 
 		/// <summary>
 		/// Sends file data to the client.
 		/// </summary>
 		/// <param name="path">File path starting with Http.RootDirectory (project/dll directory) to send.</param>
-		public void SendFile(string path)
+		public void SendFile(string path, bool fromRootDir = true)
 		{
+			if (fromRootDir)
+			{
+				path = Http.RootDirectory + path;
+			}
+
 			// Check if parameter Path exists
 			if (path == null)
 				throw new ArgumentNullException("path");
-			if (!File.Exists(Http.RootDirectory + path))
-				throw new FileNotFoundException(Http.RootDirectory + path);
+			if (!File.Exists(path))
+				throw new FileNotFoundException(path);
 
-			// Read data from file
+
+			string mime = MimeTypeMap.GetMimeType(Path.GetExtension(path).Substring(1));
+			Send(mime, new FileStream(path, FileMode.Open, FileAccess.Read));
+			/*// Read data from file
 			string result;
 			using (StreamReader streamReader = new StreamReader(Http.RootDirectory + path, Encoding.UTF8))
 			{
@@ -148,7 +175,7 @@ namespace WebBeaver.Net
 			//string mime = "text/html";
 
 			// Send data to the client
-			Send(mime, result);
+			Send(mime, result);*/
 		}
 
 		/// <summary>
